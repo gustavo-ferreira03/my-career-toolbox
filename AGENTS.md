@@ -55,6 +55,7 @@ data/output/             ← You place all generated content here
 5. **Never commit `data/` or `profile/`** — they contain personal information
 6. **Merge intelligently** when updating profile — ask before removing information
 7. **Read relevant skills** before generating (tailored-resume-generator for resumes, linkedin-profile-optimizer for LinkedIn)
+8. **DO NOT use glob** — It frequently fails. Use `find` or `ls` commands instead when checking for files
 
 ## Skills Available
 
