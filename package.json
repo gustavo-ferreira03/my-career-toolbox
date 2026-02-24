@@ -8,7 +8,9 @@
     "extract-pdf": "node dist/scripts/extract-pdf.js",
     "extract-pdf:watch": "ts-node scripts/extract-pdf.ts",
     "compile-latex": "node dist/scripts/compile-latex.js",
-    "compile-latex:watch": "ts-node scripts/compile-latex.ts"
+    "compile-latex:watch": "ts-node scripts/compile-latex.ts",
+    "agent": "opencode",
+    "agent:run": "opencode run"
   },
   "keywords": [
     "linkedin",
@@ -26,6 +28,6 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "pdf-parse": "^1.1.1"
+    "pdf-parse": "^1.1.4"
   }
 }

@@ -12,7 +12,8 @@ Um repositório de ferramentas e utilitários projetados para ajudar você (ou s
 
 ## 🚀 Como Usar
 
-### Pré-requisitos
+### Opção A: Instalação Local
+#### Pré-requisitos
 - Node.js (v18+)
 - LaTeX (`pdflatex`) instalado no sistema (opcional, necessário apenas para compilar os PDFs localmente).
 
@@ -21,7 +22,7 @@ Um repositório de ferramentas e utilitários projetados para ajudar você (ou s
 - Mac: `brew install mactex`
 - Windows: Instale TeX Live ou MiKTeX
 
-### 1. Instalação do Projeto
+### Instalação do Projeto
 Clone o repositório e instale as dependências:
 ```bash
 git clone https://github.com/gustavo-ferreira03/my-career-toolbox.git
@@ -29,7 +30,35 @@ cd my-career-toolbox
 npm install
 ```
 
-### 2. Gerador de Currículos (LaTeX)
+### Opção B: Devcontainer (Recomendado - Zero Config)
+Se você tem Docker instalado, pode usar o ambiente pré-configurado com tudo que precisa (Node.js, LaTeX, opencode):
+
+1. Abra o projeto no VS Code
+2. Instale a extensão **Dev Containers**
+3. Clique em "Reopen in Container" (ou `F1` > "Dev Containers: Reopen in Container")
+
+Tudo será instalado automaticamente: Node.js 20, LaTeX, GitHub CLI, e o agente opencode.
+
+### Opção C: Apenas o Agente de IA
+Este projeto inclui o **opencode** (um agente de IA CLI) diretamente bundled. Ele já conhece as regras do projeto (via `AGENTS.md`) e pode executar todo o workflow de otimização de carreira de forma autônoma.
+
+1. Configure sua API key criando um arquivo `.env`:
+   ```bash
+   cp .env.example .env
+   # Edite o .env e adicione sua API key (OPENAI_API_KEY, ANTHROPIC_API_KEY, etc.)
+   ```
+2. Execute o agente:
+   ```bash
+   npm run agent
+   ```
+3. O agenteirá abrir uma interface interativa. Basta pedir para ele otimizar seu LinkedIn ou gerar seu currículo.
+
+Também é possível rodar o agente em modo não-interativo:
+```bash
+npm run agent:run "Otimize meu LinkedIn para vaga de Frontend Engineer"
+```
+
+### 3. Gerador de Currículos (LaTeX)
 O repositório inclui um template limpo, com fonte clássica (serifada) e estrutura inspirada no RxResume, otimizado para caber tudo em uma página contínua.
 
 1. Copie o template da pasta `templates/latex/` para sua pasta pessoal:
@@ -46,7 +75,7 @@ O repositório inclui um template limpo, com fonte clássica (serifada) e estrut
 **Não quer instalar o LaTeX localmente?**
 Sem problemas! Copie o código de `templates/latex/curriculo_template.tex`, cole no [Overleaf](https://www.overleaf.com/), preencha seus dados e baixe o PDF de lá.
 
-### 3. Extração de Perfil (Para IAs)
+### 4. Extração de Perfil (Para IAs)
 Se você estiver usando uma IA (como ChatGPT, Claude, ou ferramentas CLI como Copilot/Cursor) para reescrever seu LinkedIn, você pode dar a ela seus dados atuais de forma fácil:
 
 1. Exporte seu perfil do LinkedIn como PDF (no seu perfil do LinkedIn clique em `Mais > Salvar como PDF`).
