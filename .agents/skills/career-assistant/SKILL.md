@@ -218,12 +218,14 @@ When generating a resume in LaTeX format, **ALWAYS use** `templates/output/latex
 ### Template Structure
 
 The template provides:
-- **Clean RxResume-style single-page layout** with custom commands
+- **A4 article-based layout** with `geometry` for precise margin control
+- **ATS-optimized** with `glyphtounicode` + `pdfgentounicode=1` for text extraction
+- **Hidden links** (`hidelinks`) — links are clickable but invisible (no blue color, no underline)
 - **Custom commands** for consistency:
   - `\name{Full Name}` — User's name (centered, bold)
   - `\jobtitle{Title}` — Professional headline
   - `\contact{email \quad linkedin \quad github}` — Contact links
-  - `\contactlink{URL}{display text}` — Clickable links with underline
+  - `\contactlink{URL}{display text}` — Clickable links (invisible styling)
   - `\experienceitem{Company}{Dates}{Position}{domain}{URL}` — Experience entries
   - `\educationitem{School}{Dates}{Degree}{Location}` — Education entries
 
