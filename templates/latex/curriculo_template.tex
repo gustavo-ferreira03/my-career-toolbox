@@ -6,7 +6,7 @@
 \usepackage{lmodern}
 
 % Packages
-\usepackage[paperwidth=21cm, paperheight=40cm, left=0.8cm, top=1cm, right=0.8cm, bottom=1cm]{geometry}
+\usepackage[paperwidth=21cm, paperheight=29.7cm, left=0.8cm, top=0.8cm, right=0.8cm, bottom=0.8cm]{geometry}
 \usepackage{xcolor}
 \usepackage{titlesec}
 \usepackage{enumitem}
@@ -31,24 +31,24 @@
   {\Large\bfseries\color{primary}}
   {}{0em}
   {}
-  [\vspace{-0.5em}\rule{\textwidth}{0.5pt}\vspace{0.5em}]
+  [\vspace{-0.5em}\rule{\textwidth}{0.5pt}\vspace{0.3em}]
 
-\titlespacing*{\section}{0pt}{1.2em}{0.5em}
+\titlespacing*{\section}{0pt}{0.8em}{0.3em}
 
 % Custom commands for formatting
-\newcommand{\name}[1]{\begin{center}\LARGE\bfseries\color{primary}#1\end{center}\vspace{-0.6em}}
-\newcommand{\jobtitle}[1]{\begin{center}\large\color{secondary}#1\end{center}\vspace{0.1em}}
-\newcommand{\contact}[1]{\begin{center}\normalsize\color{secondary}#1\end{center}\vspace{0.6em}}
+\newcommand{\name}[1]{\begin{center}\Large\bfseries\color{primary}#1\end{center}\vspace{-0.4em}}
+\newcommand{\jobtitle}[1]{\begin{center}\normalsize\color{secondary}#1\end{center}\vspace{0.05em}}
+\newcommand{\contact}[1]{\begin{center}\small\color{secondary}#1\end{center}\vspace{0.4em}}
 
-\newcommand{\contactlink}[2]{\href{#1}{\uline{#2}}}
+\newcommand{\contactlink}[2]{\href{#1}{\smash{\uline{#2}}}}
 
 \newcommand{\experienceitem}[5]{
     \noindent
     \begin{tabularx}{\textwidth}{@{}X r@{}}
         \textbf{#1} & \textbf{#2} \\
-        \textit{#3} & \small\href{#5}{#4} \\
+        \textit{#3} & \small\href{#5}{\smash{\uline{#4}}} \\
     \end{tabularx}
-    \vspace{-0.4em}
+    \vspace{-0.3em}
 }
 
 \newcommand{\educationitem}[4]{
@@ -60,8 +60,8 @@
     \vspace{0.2em}
 }
 
-% List formatting
-\setlist[itemize]{leftmargin=1.5em, itemsep=0.15em, topsep=0.2em, parsep=0pt}
+% List formatting - Compacto para caber em uma página
+\setlist[itemize]{leftmargin=1.5em, itemsep=0.1em, topsep=0em, parsep=0pt}
 
 \begin{document}
 \pagestyle{empty} % No page numbers
@@ -80,9 +80,8 @@
 \begin{itemize}
     \item [Descreva uma conquista importante ou projeto que você participou, focando em impacto.]
     \item [Implementou X usando Y, que resultou em Z melhoria de performance ou negócio.]
-    \item [Mencione metodologias, liderança técnica ou impacto na equipe.]
 \end{itemize}
-\vspace{0.8em}
+\vspace{0.5em}
 
 \experienceitem{[Nome da Empresa 2]}{[Mês] [Ano] -- [Mês] [Ano]}{[Seu Cargo Anterior]}{[dominio.com.br]}{https://[dominio.com.br]}
 \begin{itemize}
@@ -94,10 +93,9 @@
 
 \experienceitem{[Nome do Projeto 1]}{[Mês] [Ano] -- [Mês] [Ano]}{[Papel, ex: Criador / Desenvolvedor Freelancer]}{[projetolink.com]}{https://[projetolink.com]}
 \begin{itemize}
-    \item [Breve descrição do problema que o projeto resolve e para quem ele é direcionado.]
-    \item [Tecnologias utilizadas: React, Node.js, PostgreSQL, Docker.]
+    \item [Breve descrição do problema que o projeto resolve.]
 \end{itemize}
-\vspace{0.8em}
+\vspace{0.5em}
 
 \experienceitem{[Nome do Projeto 2]}{[Ano] -- [Ano]}{[Papel ou Foco do Projeto]}{[github.com/seu-projeto]}{https://github.com/[seu-usuario]/[seu-projeto]}
 \begin{itemize}
