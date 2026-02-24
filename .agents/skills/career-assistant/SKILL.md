@@ -85,8 +85,14 @@ Where you place all generated content:
 4. Read the output template (`templates/output/RESUME_TEMPLATE.md` or `templates/output/latex/curriculo_template.tex`)
 5. Match the user's experience/skills to the job requirements
 6. Generate a tailored resume emphasizing relevant experience
-7. Output to `data/output/` (markdown and/or LaTeX)
-8. If LaTeX: compile with `npm run compile-latex`
+7. Output to `data/output/`:
+   - **Markdown**: Use `templates/output/RESUME_TEMPLATE.md` structure
+   - **LaTeX**: ALWAYS use `templates/output/latex/curriculo_template.tex` as the base structure
+     - Replace placeholders with actual content
+     - Preserve the custom commands (`\name`, `\jobtitle`, `\contact`, `\contactlink`, `\experienceitem`, `\educationitem`)
+     - Keep the section formatting and styling
+     - Adjust `itemize` bullets for relevance to the job
+8. If LaTeX: compile with `npm run compile-latex` to PDF
 9. Provide a summary of what was emphasized and any gaps identified
 
 ### 3. Optimize LinkedIn Profile
@@ -179,6 +185,49 @@ Where you place all generated content:
    - **2-minute**: Interview opening "tell me about yourself"
 3. Each pitch should follow: Who I am → What I do → What I've achieved → What I'm looking for
 4. Adapt language to the context (formal vs casual, technical vs non-technical audience)
+
+## LaTeX Resume Template
+
+When generating a resume in LaTeX format, **ALWAYS use** `templates/output/latex/curriculo_template.tex` as the structural foundation.
+
+### Template Structure
+
+The template provides:
+- **Clean RxResume-style single-page layout** with custom commands
+- **Custom commands** for consistency:
+  - `\name{Full Name}` — User's name (centered, bold)
+  - `\jobtitle{Title}` — Professional headline
+  - `\contact{email \quad linkedin \quad github}` — Contact links
+  - `\contactlink{URL}{display text}` — Clickable links with underline
+  - `\experienceitem{Company}{Dates}{Position}{domain}{URL}` — Experience entries
+  - `\educationitem{School}{Dates}{Degree}{Location}` — Education entries
+
+### How to Use
+
+1. Replace **all placeholders** with actual content from `profile/`
+2. Keep the **section structure** (Experiência Profissional, Projetos, Competências, Formação)
+3. **Adapt sections** based on relevance to the job:
+   - Remove projects if not relevant to the role
+   - Reorder sections by priority (skills section → first if highly relevant)
+   - Adjust bullet points to emphasize job-specific achievements
+4. **Always compile** with `npm run compile-latex` before outputting
+5. Output both `.tex` and `.pdf` to `data/output/latex/`
+
+### Don't Do
+
+- ❌ Create a new LaTeX structure from scratch
+- ❌ Use generic resume templates
+- ❌ Ignore the custom commands
+- ❌ Add sections not in the template (without good reason)
+- ❌ Modify the template's visual styling
+
+### Do
+
+- ✅ Use the template as-is, just replace content
+- ✅ Keep the RxResume minimal style
+- ✅ Use the custom commands
+- ✅ Tailor bullets to the specific job
+- ✅ Always output `.tex` + compiled `.pdf`
 
 ## Language Guidelines
 
