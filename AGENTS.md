@@ -12,9 +12,14 @@ Sempre que o usuário pedir para gerar, otimizar ou criar um currículo/perfil n
 
 ### Passo 1: Busca de Contexto e Dados (Crucial)
 O usuário **NÃO** precisa te dar os dados profissionais dele no chat. É seu dever procurá-los.
-1. Use as ferramentas de `read` e `glob` para ler os dados do usuário na pasta **`data/input/`**. O usuário geralmente colocará arquivos exportados ali, como `Profile.pdf`, `Resume.pdf`, `Profile.txt` ou `Resume.txt`.
-2. Dê preferência aos arquivos `.txt` (pois o usuário pode rodar `npm run extract-pdf` para gerar texto puro e facilitar sua leitura).
-3. **Se não encontrar nada**, avise o usuário: *"Por favor, coloque seu currículo ou perfil do LinkedIn em PDF na pasta `data/input/` e rode `npm run extract-pdf`."*
+1. Use as ferramentas de `read` e `glob` para verificar os dados do usuário na pasta **`data/input/`**.
+2. **Se houver arquivos PDF** (como `Profile.pdf` ou `Resume.pdf`), **rode o extrator você mesmo** antes de prosseguir:
+   ```bash
+   npm run build && npm run extract-pdf
+   ```
+   Isso evita desperdício de tokens e garante que você leia texto puro.
+3. **Se houver arquivos .txt**, leia-os diretamente.
+4. **Se não encontrar nada**, avise o usuário: *"Por favor, coloque seu currículo ou perfil do LinkedIn em PDF na pasta `data/input/`."*
 
 ### Passo 2: Seleção e Leitura de Templates
 NUNCA modifique os arquivos na pasta `templates/`. Eles são apenas moldes.
