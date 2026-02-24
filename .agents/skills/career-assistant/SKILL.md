@@ -94,23 +94,31 @@ Where you place all generated content:
 
 ### 2. Generate Tailored Resume
 
-**Trigger**: User provides a job description or asks for a resume.
+**Trigger**: User provides a job description, asks for a resume, or asks to improve their existing resume.
 
 **Steps**:
 1. Read the job description (from `data/input/vagas/`, pasted text, or URL)
-2. Read all relevant `profile/` files (especially `experience.md`, `skills.md`, `projects.md`)
-3. Load the `tailored-resume-generator` skill for methodology
-4. Read the output template: `templates/output/latex/curriculo_template.tex`
-5. Match the user's experience/skills to the job requirements
-6. Generate a tailored resume emphasizing relevant experience
-7. Output to `data/output/latex/`:
-   - **ALWAYS generate in LaTeX format** using `templates/output/latex/curriculo_template.tex` as the structural base
-     - Replace placeholders with actual content
-     - Preserve the custom commands (`\name`, `\jobtitle`, `\contact`, `\contactlink`, `\experienceitem`, `\educationitem`)
-     - Keep the section formatting and styling
-     - Adjust `itemize` bullets for relevance to the job
-8. Compile with `npm run compile-latex` to PDF
-9. Provide a summary of what was emphasized and any gaps identified
+2. **If profile/ lacks information**, check `data/input/` for PDFs or text files and extract/merge them into profile/ first
+3. Read all relevant `profile/` files (especially `experience.md`, `skills.md`, `projects.md`)
+4. Load the `tailored-resume-generator` skill for methodology
+5. Load the `copywriting` skill for persuasive writing principles
+6. Load the `marketing-psychology` skill for impact and framing
+7. Read the output template: `templates/output/latex/curriculo_template.tex`
+8. Match the user's experience/skills to the job requirements
+9. **Generate a compelling resume** with:
+   - Natural Portuguese (articles, prepositions, no telegraphic style)
+   - Copywriting principles (clarity > cleverness, benefits > features, specificity, customer language)
+   - Psychology principles (social proof, authority, scarcity, loss aversion, anchoring, framing)
+   - Metrics and results (always quantify when possible, even if estimated)
+   - Each bullet tells a story: problem → solution → impact
+10. Output to `data/output/latex/`:
+    - **ALWAYS generate in LaTeX format** using `templates/output/latex/curriculo_template.tex` as the structural base
+      - Replace placeholders with actual content
+      - Preserve the custom commands (`\name`, `\jobtitle`, `\contact`, `\contactlink`, `\experienceitem`, `\educationitem`)
+      - Keep the section formatting and styling
+      - Adjust `itemize` bullets for relevance to the job
+11. Compile with `npm run compile-latex` to PDF
+12. Provide a summary of what was emphasized and any gaps identified
 
 ### 3. Optimize LinkedIn Profile
 
