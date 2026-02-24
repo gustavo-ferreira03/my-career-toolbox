@@ -1,5 +1,11 @@
 # Agent Instructions for OpenCode
 
+## ⛔ NEVER USE GLOB — IT FAILS SILENTLY
+
+**DO NOT use the Glob tool in this project. It frequently returns empty results even when files exist.**
+
+Use `find` or `ls` commands via Bash instead. Example: `find data/input -type f` or `ls profile/`.
+
 This repository is a professional knowledge base system designed to work with AI agents.
 
 ## Before You Do Anything
