@@ -1,4 +1,4 @@
-# Career Knowledge Base
+# My Career Toolbox
 
 Seu repositório pessoal de informações profissionais, alimentado por IA.
 
