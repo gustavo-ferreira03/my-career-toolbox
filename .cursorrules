@@ -1,42 +1,48 @@
-# Cursor/IDE Agent Rules for My Career Toolbox
+# Agent Rules for Career Knowledge Base
 
-This repository is specifically designed to work with AI agents (Cursor, Copilot, Cline).
+This repository is an agent-first professional knowledge base.
+The user drops raw files (PDFs, job descriptions, etc.) and the agent does all the work.
 
-## 🚨 CRITICAL RULE: Skills Are Mandatory
+## CRITICAL: Read the Career Assistant Skill First
 
-**BEFORE taking ANY action about the user's career, you MUST:**
+**BEFORE doing anything**, read `.agents/skills/career-assistant/SKILL.md`.
+It defines the complete architecture, workflows, and rules for this project.
 
-1. **READ the relevant skills** in `.agents/skills/`:
-   - `tech-resume-optimizer/SKILL.md` - For technical resumes
-   - `resume-ats-optimizer/SKILL.md` - For ATS-compliant resumes
-   - `linkedin-profile-optimizer/SKILL.md` - For LinkedIn profiles
-   - `copywriting/SKILL.md` - For professional writing
-   - `writing-skills/SKILL.md` - For tone and voice rules
+## Quick Reference
 
-2. **APPLY 100% of the skills' methodologies** - don't skip anything
-3. **FOLLOW the formulas, examples, and metrics** in the skills
-4. **If you don't read skills first, the output will be mediocre**
+### Architecture
 
-## Quick Workflow
+```
+data/input/     → User drops files here (PDFs, job descriptions, links)
+profile/        → Knowledge base (agent generates and maintains this)
+data/output/    → Generated outputs (resumes, cover letters, etc.)
+templates/      → Structural references (never modify)
+```
 
-1. Read relevant skills from `.agents/skills/`
-2. Check `data/input/` for PDFs/TXTs
-3. If PDF exists → run: `npm run build && npm run extract-pdf`
-4. Read the appropriate template from `templates/`
-5. **Apply all skill methodologies** to the content
-6. Generate final file in `data/output/`
-7. If LaTeX → compile with: `npm run compile-latex`
+### Available Skills
 
-## Key Rules
+1. **`career-assistant`** — Main skill. Orchestrates everything. READ THIS FIRST.
+2. **`tailored-resume-generator`** — Methodology for tailoring resumes to job descriptions.
+3. **`linkedin-profile-optimizer`** — Methodology for LinkedIn profile optimization.
+4. **`writing-skills`** — Meta-skill for creating/editing other skills.
 
-- **Never modify `templates/`** - They are reference only
-- **Always output to `data/output/`** - User files only go there
-- **Never commit `data/`** - It's in .gitignore for privacy
-- **Skills are not optional** - They define quality standards
+### Common Workflows
 
-## Key Files
+| User wants... | Do this |
+|---|---|
+| Process new input files | Read career-assistant → Process Inputs workflow |
+| Resume for a specific job | Read career-assistant + tailored-resume-generator → Generate Tailored Resume workflow |
+| Optimize LinkedIn | Read career-assistant + linkedin-profile-optimizer → Optimize LinkedIn workflow |
+| Respond to recruiter | Read career-assistant → Respond to Recruiter workflow |
+| Prepare for interview | Read career-assistant → Prepare for Interview workflow |
+| Cover letter | Read career-assistant → Generate Cover Letter workflow |
+| Portfolio content | Read career-assistant → Generate Portfolio workflow |
+| Elevator pitch | Read career-assistant → Generate Elevator Pitch workflow |
 
-- `AGENTS.md` - Complete instructions (required reading)
-- `QUICKSTART.md` - 3-step guide for users
-- `README.md` - Full documentation
-- `.agents/skills/` - **Mandatory optimization methodologies**
+### Key Rules
+
+- **Never modify `templates/`** — They are structural references only
+- **Always output to `data/output/`** — Never overwrite input files
+- **Never commit `data/` or `profile/`** — They contain personal information
+- **profile/ is the source of truth** — Always read it before generating outputs
+- **Skills are mandatory** — Read the relevant skill before generating any output

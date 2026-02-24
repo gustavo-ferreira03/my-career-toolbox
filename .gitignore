@@ -9,14 +9,13 @@ dist/
 .env.local
 .env.*.local
 
-# LinkedIn session (if ever used)
-linkedin_session/
-
-# Personal data - Ignore EVERYTHING inside data directory
+# Personal data - NEVER commit these
 data/
+profile/
 # But keep directory structure with .gitkeep files
 !**/data/.gitkeep
 !**/data/**/.gitkeep
+!**/profile/.gitkeep
 
 # OS files
 .DS_Store
