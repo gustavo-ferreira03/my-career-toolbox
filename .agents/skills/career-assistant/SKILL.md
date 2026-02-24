@@ -60,9 +60,8 @@ Templates for these files are in `templates/profile/` — use them as structural
 
 ### Output Templates (`templates/output/`)
 Format references for generated outputs:
-- `RESUME_TEMPLATE.md` - ATS-optimized resume structure
-- `LINKEDIN_TEMPLATE.md` - LinkedIn profile structure
-- `latex/curriculo_template.tex` - LaTeX resume template
+- `curriculo_template.tex` (in `latex/`) - LaTeX resume template (THE ONLY resume format)
+- `LINKEDIN_TEMPLATE.md` - LinkedIn profile structure reference
 
 ### Output (`data/output/`)
 Where you place all generated content:
@@ -101,17 +100,16 @@ Where you place all generated content:
 1. Read the job description (from `data/input/vagas/`, pasted text, or URL)
 2. Read all relevant `profile/` files (especially `experience.md`, `skills.md`, `projects.md`)
 3. Load the `tailored-resume-generator` skill for methodology
-4. Read the output template (`templates/output/RESUME_TEMPLATE.md` or `templates/output/latex/curriculo_template.tex`)
+4. Read the output template: `templates/output/latex/curriculo_template.tex`
 5. Match the user's experience/skills to the job requirements
 6. Generate a tailored resume emphasizing relevant experience
-7. Output to `data/output/`:
-   - **Markdown**: Use `templates/output/RESUME_TEMPLATE.md` structure
-   - **LaTeX**: ALWAYS use `templates/output/latex/curriculo_template.tex` as the base structure
+7. Output to `data/output/latex/`:
+   - **ALWAYS generate in LaTeX format** using `templates/output/latex/curriculo_template.tex` as the structural base
      - Replace placeholders with actual content
      - Preserve the custom commands (`\name`, `\jobtitle`, `\contact`, `\contactlink`, `\experienceitem`, `\educationitem`)
      - Keep the section formatting and styling
      - Adjust `itemize` bullets for relevance to the job
-8. If LaTeX: compile with `npm run compile-latex` to PDF
+8. Compile with `npm run compile-latex` to PDF
 9. Provide a summary of what was emphasized and any gaps identified
 
 ### 3. Optimize LinkedIn Profile
