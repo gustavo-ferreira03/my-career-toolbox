@@ -2,26 +2,41 @@
 
 This repository is specifically designed to work with AI agents (Cursor, Copilot, Cline).
 
-## Critical Rules
+## 🚨 CRITICAL RULE: Skills Are Mandatory
 
-1. **READ AGENTS.MD FIRST** - It contains the complete workflow
-2. **User data in `data/input/`** - Automatically extract and process
-3. **Never modify `templates/`** - They are reference only
-4. **Always output to `data/output/`** - User files only go there
-5. **Never commit `data/`** - It's in .gitignore for privacy
+**BEFORE taking ANY action about the user's career, you MUST:**
+
+1. **READ the relevant skills** in `.agents/skills/`:
+   - `tech-resume-optimizer/SKILL.md` - For technical resumes
+   - `resume-ats-optimizer/SKILL.md` - For ATS-compliant resumes
+   - `linkedin-profile-optimizer/SKILL.md` - For LinkedIn profiles
+   - `copywriting/SKILL.md` - For professional writing
+   - `writing-skills/SKILL.md` - For tone and voice rules
+
+2. **APPLY 100% of the skills' methodologies** - don't skip anything
+3. **FOLLOW the formulas, examples, and metrics** in the skills
+4. **If you don't read skills first, the output will be mediocre**
 
 ## Quick Workflow
 
-1. Check `data/input/` for PDFs/TXTs
-2. If PDF exists → run: `npm run build && npm run extract-pdf`
-3. Read the appropriate template from `templates/`
-4. Apply skills from `.agents/skills/`
-5. Generate final file in `data/output/`
-6. If LaTeX → compile with: `npm run compile-latex`
+1. Read relevant skills from `.agents/skills/`
+2. Check `data/input/` for PDFs/TXTs
+3. If PDF exists → run: `npm run build && npm run extract-pdf`
+4. Read the appropriate template from `templates/`
+5. **Apply all skill methodologies** to the content
+6. Generate final file in `data/output/`
+7. If LaTeX → compile with: `npm run compile-latex`
+
+## Key Rules
+
+- **Never modify `templates/`** - They are reference only
+- **Always output to `data/output/`** - User files only go there
+- **Never commit `data/`** - It's in .gitignore for privacy
+- **Skills are not optional** - They define quality standards
 
 ## Key Files
 
 - `AGENTS.md` - Complete instructions (required reading)
 - `QUICKSTART.md` - 3-step guide for users
 - `README.md` - Full documentation
-- `.agents/skills/` - Optimization methodologies
+- `.agents/skills/` - **Mandatory optimization methodologies**

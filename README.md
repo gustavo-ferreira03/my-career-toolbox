@@ -9,9 +9,11 @@ Este repositório foi construído para ser usado com agentes de IA (Cursor, Copi
 ## O Que Este Projeto Faz
 
 1. **Extrai dados de PDFs** - Converte seus PDFs do LinkedIn/currículo em texto puro para análise
-2. **Otimiza conteúdo** - Aplica técnicas de copywriting e métricas de impacto ao seu conteúdo
+2. **Otimiza conteúdo com Skills** - Aplica metodologias profissionais de copywriting, métricas de impacto e tone correto
 3. **Gera currículos** - Cria versões otimizadas em LaTeX (PDF), Markdown e para ATS
 4. **Integra com agentes de IA** - O agente sabe exatamente o que fazer com seus dados
+
+**Importante:** Este repositório contém **skills obrigatórias** (em `.agents/skills/`) que definem como otimizar carreiras. Qualquer ação sobre currículo/perfil DEVE aplicar 100% dessas metodologias.
 
 ---
 
@@ -110,10 +112,12 @@ my-career-toolbox/
 
 Leia `AGENTS.md` - ele contém todas as instruções sobre como operar este repositório.
 
+**Regra Crítica:** Você DEVE ler e aplicar 100% das skills em `.agents/skills/` antes de otimizar qualquer currículo ou perfil. Sem isso, o resultado será mediocre.
+
 **Em resumo:**
-1. Você não precisa colar dados no chat
+1. Leia as skills relevantes (tech-resume-optimizer, copywriting, etc)
 2. O agente busca automaticamente em `data/input/`
-3. Aplica skills de otimização
+3. Aplica 100% das metodologias das skills
 4. Gera arquivos finais em `data/output/`
 
 ### Exemplo de Prompt

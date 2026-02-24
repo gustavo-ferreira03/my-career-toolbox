@@ -2,6 +2,31 @@
 
 Este repositório foi construído **especificamente para ser operado por agentes de inteligência artificial** (Cursor, Copilot, Cline, OpenCode, etc). O objetivo é automatizar a otimização de perfis do LinkedIn e a geração de currículos em LaTeX e Markdown.
 
+## ⚠️ REGRA CRÍTICA: Skills São Obrigatórias
+
+**ANTES de tomar qualquer ação sobre carreira do usuário, você DEVE:**
+
+1. **Ler as skills relevantes** em `.agents/skills/`:
+   - `tech-resume-optimizer/SKILL.md` - Para otimizar currículos técnicos
+   - `resume-ats-optimizer/SKILL.md` - Para currículos ATS-compliant
+   - `linkedin-profile-optimizer/SKILL.md` - Para perfis LinkedIn
+   - `copywriting/SKILL.md` - Para redação profissional e impactante
+   - `writing-skills/SKILL.md` - Para regras de tom e voz
+
+2. **NÃO inicie nenhuma redação ou otimização** sem antes ter consultado as skills
+3. **Aplique 100% das metodologias** descritas nas skills - não ignore nada
+4. **Siga as métricas, fórmulas e exemplos** fornecidos nas skills
+
+### Por Que Skills São Obrigatórias?
+- Contêm metodologias profissionais testadas
+- Definem o tom correto (sem jargão, sem emojis)
+- Ensinam como estruturar resultados e impacto
+- Garantem qualidade consistente
+
+**Se você não ler e aplicar as skills, o resultado será mediocre e não alcançará o objetivo.**
+
+---
+
 ## O Fluxo de Trabalho Obrigatório
 
 Quando o usuário pedir para gerar, otimizar ou reescrever um currículo/perfil, siga **estas etapas nesta ordem exata**:
@@ -30,13 +55,22 @@ O usuário **não precisa** colar seus dados no chat. Você deve procurá-los.
 - **Para Currículo LaTeX:** `templates/latex/curriculo_template.tex`
 - **Para Currículo Markdown:** `templates/RESUME_TEMPLATE.md`
 
-### Etapa 3: Aplique as Skills de Otimização
+### Etapa 3: Aplique as Skills de Otimização (OBRIGATÓRIO)
+
+**LEIA AS SKILLS ANTES DE PROSSEGUIR.** Elas contêm as metodologias que você DEVE seguir.
 
 Consulte as metodologias em `.agents/skills/`:
 
-- **`tech-resume-optimizer`** e **`resume-ats-optimizer`** → Para currículos
-- **`linkedin-profile-optimizer`** → Para perfis do LinkedIn
-- **`copywriting`** e **`writing-skills`** → Para redação natural e impactante
+- **`tech-resume-optimizer/SKILL.md`** e **`resume-ats-optimizer/SKILL.md`** → Para currículos
+- **`linkedin-profile-optimizer/SKILL.md`** → Para perfis do LinkedIn
+- **`copywriting/SKILL.md`** e **`writing-skills/SKILL.md`** → Para redação natural e impactante
+
+**Você DEVE:**
+- Ler as fórmulas de bullet points (ex: [Verbo de Ação] + [O que] + [Ferramenta] + [Impacto])
+- Aplicar as métricas corretas (escala, performance, impacto financeiro)
+- Seguir o tom definido (sem emojis, sem jargão vazio)
+- Usar os exemplos como referência
+- Aplicar 100% das regras, não escolha parcial
 
 ### Etapa 4: Gere o Arquivo Final
 
@@ -112,9 +146,10 @@ npm run compile-latex
 
 ## Checklist para Antes de Terminar
 
+- [ ] Skills lidas completamente (tech-resume-optimizer, copywriting, etc)
 - [ ] Dados coletados de `data/input/` (PDF extraído ou `.txt` lido)
 - [ ] Template escolhido e lido
-- [ ] Skills aplicadas (tech-resume-optimizer, copywriting, etc)
+- [ ] 100% das metodologias das skills aplicadas
 - [ ] Arquivo gerado em `data/output/` com nome claro
 - [ ] ZERO placeholders deixados no arquivo final
 - [ ] LaTeX compilado para PDF (se aplicável)

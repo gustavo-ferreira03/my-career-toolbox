@@ -2,6 +2,14 @@
 
 Quer otimizar seu perfil do LinkedIn ou currículo em menos de 5 minutos? Comece aqui.
 
+## ⚠️ Aviso Importante
+
+Este repositório usa **skills obrigatórias** (em `.agents/skills/`) que definem como otimizar sua carreira. O agente DEVE ler e aplicar 100% delas para gerar um resultado de qualidade.
+
+Se isso não for feito, o resultado será mediocre e ineficaz.
+
+---
+
 ## 3 Passos Rápidos
 
 ### 1️⃣ Prepare seus dados
