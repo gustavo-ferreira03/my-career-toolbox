@@ -34,3 +34,4 @@ templates/      → Structural references (never modify)
 - **profile/ is the source of truth** — Always read it before generating outputs
 - **Skills are mandatory** — Read the relevant skill before generating any output
 - **Auto-check `data/input/` when profile is incomplete** — If profile/ lacks information needed for a good output, check `data/input/` for PDFs or files to extract and merge into profile/ before generating output
+- **DO NOT use glob** — It frequently fails. Use `find` or `ls` commands instead when checking for files
