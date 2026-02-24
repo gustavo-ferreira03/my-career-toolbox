@@ -1,0 +1,31 @@
+{
+  "name": "my-career-toolbox",
+  "version": "1.0.0",
+  "description": "Ferramentas para agentes de IA auxiliarem na otimização de perfis do LinkedIn e gerenciamento de currículos em LaTeX.",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "extract-pdf": "node dist/scripts/extract-pdf.js",
+    "extract-pdf:watch": "ts-node scripts/extract-pdf.ts",
+    "compile-latex": "node dist/scripts/compile-latex.js",
+    "compile-latex:watch": "ts-node scripts/compile-latex.ts"
+  },
+  "keywords": [
+    "linkedin",
+    "resume",
+    "career",
+    "ai-agents",
+    "optimization"
+  ],
+  "author": "Gustavo Cosme",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^25.3.0",
+    "@types/pdf-parse": "^1.1.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "pdf-parse": "^1.1.1"
+  }
+}

@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# LinkedIn session (if ever used)
+linkedin_session/
+
+# Personal data - Ignore EVERYTHING inside data directory
+data/
+# But keep directory structure with .gitkeep files
+!**/data/.gitkeep
+!**/data/**/.gitkeep
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor directories
+.idea/
+.vscode/
+*.swp
+*.swo

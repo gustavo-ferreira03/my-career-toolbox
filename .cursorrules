@@ -1,0 +1,8 @@
+# Always read instructions from AGENTS.md before operating in this repository
+# This repository focuses on parsing profile data and rendering LaTeX/Markdown resumes.
+
+- Priority 1: Do NOT overwrite files in `templates/`
+- Priority 2: Use `data/input/` for context gathering
+- Priority 3: Save generated user files strictly inside `data/output/`
+
+Read `AGENTS.md` for full documentation on the expected workflow.
