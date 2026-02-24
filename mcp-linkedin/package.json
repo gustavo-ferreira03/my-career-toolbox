@@ -1,0 +1,23 @@
+{
+  "name": "mcp-linkedin",
+  "version": "0.1.0",
+  "description": "MCP server for LinkedIn profile automation using Playwright",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "login": "tsx src/index.ts --login",
+    "build": "tsc",
+    "install-browser": "npx patchright install chromium"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.0",
+    "patchright": "^1.57.0",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0",
+    "@types/node": "^22.0.0"
+  }
+}
