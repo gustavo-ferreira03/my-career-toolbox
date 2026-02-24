@@ -62,6 +62,10 @@ A **professional knowledge management system** (not a resume builder):
 Mixed Portuguese/English: narrative in Brazilian Portuguese, technical terms in English.
 Generate outputs in whatever language the user requests (default: same as conversation).
 
+## Plain Text Only in Generated Outputs
+
+NEVER use emojis, unicode arrows, em-dashes, en-dashes, fancy quotes, or any decorative unicode characters in generated outputs (resumes, LinkedIn content, cover letters, pitches, etc.). Use only plain ASCII/Latin characters: regular hyphens, standard bullet points, straight quotes, "->" instead of arrow symbols.
+
 ## Quick Architecture
 
 ```

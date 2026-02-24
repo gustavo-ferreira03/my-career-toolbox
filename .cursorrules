@@ -51,5 +51,6 @@ Do NOT try to load `tech-resume-optimizer`, `resume-ats-optimizer`, or any skill
 - **Never commit `data/` or `profile/`** — They contain personal information
 - **profile/ is the source of truth** — Always read it before generating outputs
 - **Skills are mandatory** — Read the relevant skill before generating any output
+- **Plain text only in outputs** — NEVER use emojis, unicode arrows, em-dashes, en-dashes, fancy quotes, or decorative unicode in generated outputs. Use only plain ASCII/Latin characters.
 - **ALWAYS process `data/input/` first** — Before generating ANY output, check `data/input/` for unprocessed files and extract them into `profile/`. Do NOT skip this even if `profile/` already has data.
 - **DO NOT use glob** — It frequently fails. Use `find` or `ls` commands instead when checking for files

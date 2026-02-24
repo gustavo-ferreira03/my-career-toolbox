@@ -397,6 +397,18 @@ Use ESTES verbos no pretérito perfeito (primeira pessoa). Nunca use "Fui respon
 - **Comprimento**: Cada bullet deve ter 1-2 linhas. Conciso mas rico em detalhes
 - **Naturalidade**: O texto DEVE soar como português brasileiro natural. NUNCA cortar artigos ou preposições no estilo telegráfico de currículo americano. Usar "um", "uma", "o", "a", "os", "as", "para um", "utilizando o", etc.
 
+### CRITICAL: Plain Text Characters Only
+
+All generated outputs (resumes, LinkedIn content, cover letters, pitches, etc.) MUST use only plain ASCII/Latin characters. NEVER use:
+
+- Emojis or symbols (no checkmarks, crosses, stars, rockets, etc.)
+- Arrows (no unicode arrows like arrows, use "->" or ">" or bullet points instead)
+- Em-dashes or en-dashes (use " - " with spaces, or " -- ")
+- Fancy quotes or typographic characters (use straight quotes)
+- Any non-standard unicode decorative characters
+
+This rule exists because LLMs default to inserting decorative unicode characters that look unprofessional in career documents and can break ATS parsers. Use plain hyphens, standard bullet points, and regular punctuation only.
+
 ### When Profile Data is Vague
 
 If `profile/experience.md` has vague descriptions without metrics:
