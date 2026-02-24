@@ -9,28 +9,7 @@ import {
   profileExperienceSection,
   seeMoreButton,
 } from "../utils/locators.js";
-
-async function navigateToMyProfile(page: Page): Promise<void> {
-  await page.goto("https://www.linkedin.com/in/me/", {
-    waitUntil: "domcontentloaded",
-    timeout: 15000,
-  });
-  await randomDelay(1000, 2000);
-}
-
-/**
- * Scroll down the page progressively to trigger lazy-loading of sections.
- * LinkedIn profile pages load sections on demand as the user scrolls.
- */
-async function scrollToLoadSections(page: Page): Promise<void> {
-  for (let i = 0; i < 8; i++) {
-    await page.evaluate(() => window.scrollBy(0, 400));
-    await randomDelay(300, 600);
-  }
-  // Scroll back to top
-  await page.evaluate(() => window.scrollTo(0, 0));
-  await randomDelay(300, 500);
-}
+import { navigateToMyProfile, scrollToLoadSections } from "../utils/navigation.js";
 
 /**
  * Extract the About section text.

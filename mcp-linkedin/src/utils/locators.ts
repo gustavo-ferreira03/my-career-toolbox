@@ -133,3 +133,156 @@ export function dismissModal(page: Page): Locator {
     .or(page.locator("button.artdeco-modal__dismiss"))
     .first();
 }
+
+// -- Skills section (profile page) --
+
+export function profileSkillsSection(page: Page): Locator {
+  // LinkedIn PT-BR uses "Competências"; English uses "Skills"
+  return page
+    .locator("section")
+    .filter({
+      has: page
+        .locator("h2")
+        .filter({ hasText: /Competências|Skills/i }),
+    })
+    .first();
+}
+
+export function skillItems(skillsSection: Locator): Locator {
+  // Skill items are <li> elements within the skills section container
+  return skillsSection.locator("li");
+}
+
+export function skillEditButton(skillItem: Locator): Locator {
+  // Each skill has an edit button (pencil icon) in a <button>
+  // PT-BR: "Editar"; EN: "Edit"
+  return skillItem
+    .locator("button")
+    .filter({ hasText: /editar|edit/i })
+    .first();
+}
+
+export function skillDeleteButton(skillEditMenu: Locator): Locator {
+  // After clicking edit button, a dropdown menu appears.
+  // PT-BR: "Deletar"; EN: "Delete"
+  return skillEditMenu
+    .locator("button")
+    .filter({ hasText: /deletar|delete/i })
+    .first();
+}
+
+export function addSkillButton(skillsSection: Locator): Locator {
+  // PT-BR: "Adicionar"; EN: "Add"
+  // Usually appears at the top or bottom of the skills section
+  return skillsSection
+    .locator("button")
+    .filter({ hasText: /adicionar|add/i })
+    .first();
+}
+
+export function skillNameInput(page: Page): Locator {
+  // Modal input for skill name. Uses aria-label or placeholder.
+  // PT-BR: "Nome da competência"; EN: "Skill name"
+  return page
+    .getByPlaceholder(/nome da competência|skill name/i)
+    .or(page.getByLabel(/nome da competência|skill name/i))
+    .first();
+}
+
+export function skillModalSaveButton(page: Page): Locator {
+  // PT-BR: "Salvar", EN: "Save"
+  return page
+    .locator(".artdeco-modal")
+    .getByRole("button", { name: /^(salvar|save)$/i })
+    .first();
+}
+
+// -- Jobs search page --
+
+export function jobsSearchContainer(page: Page): Locator {
+  // Main container for jobs search results
+  return page.locator(".jobs-search__results-list").first();
+}
+
+export function jobCards(jobsSearchContainer: Locator): Locator {
+  // Individual job card items
+  // Usually <div> with role="option" or <li>
+  return jobsSearchContainer.locator("[role='option']").or(
+    jobsSearchContainer.locator("li")
+  );
+}
+
+export function jobCardTitle(jobCard: Locator): Locator {
+  // Job title within a card
+  // Usually an <h3> or span with the job title
+  return jobCard.locator("h3, [class*='job-card-title']").first();
+}
+
+export function jobIdFromCard(jobCard: Locator): Promise<string | null> {
+  // Extract job ID from the job card's data attributes or href
+  // Jobs have data-job-id or similar
+  return jobCard.getAttribute("data-job-id");
+}
+
+// -- Job details page --
+
+export function jobDetailsTitle(page: Page): Locator {
+  // Job title on the job details page
+  return page.locator(".jobs-details h1").first();
+}
+
+export function jobDetailsDescription(page: Page): Locator {
+  // Job description/about section
+  return page.locator(".jobs-details__main-content").first();
+}
+
+export function jobDetailsMetadata(page: Page): Locator {
+  // Container with company name, location, seniority, etc.
+  return page.locator(".jobs-details-top-card__company-name").first();
+}
+
+export function easyApplyButton(page: Page): Locator {
+  // PT-BR: "Candidatar-se"; EN: "Easy Apply"
+  // Usually a primary button in the job details
+  return page
+    .getByRole("button", { name: /candidatar|easy apply/i })
+    .first();
+}
+
+// -- Easy Apply modal --
+
+export function easyApplyModal(page: Page): Locator {
+  // The modal dialog container for Easy Apply form
+  return page.locator(".artdeco-modal").first();
+}
+
+export function easyApplyFormField(modal: Locator, label: string): Locator {
+  // Generic form field in Easy Apply modal by label text
+  // label: "name", "email", "phone", "message", etc.
+  return modal.getByLabel(new RegExp(label, "i")).first();
+}
+
+export function easyApplyFileInput(modal: Locator): Locator {
+  // File upload input in Easy Apply modal
+  return modal.locator('input[type="file"]').first();
+}
+
+export function easyApplyNextButton(modal: Locator): Locator {
+  // PT-BR: "Próximo"; EN: "Next"
+  return modal
+    .getByRole("button", { name: /próximo|next/i })
+    .first();
+}
+
+export function easyApplySubmitButton(modal: Locator): Locator {
+  // PT-BR: "Enviar candidatura"; EN: "Submit application" / "Submit"
+  return modal
+    .getByRole("button", { name: /enviar|submit/i })
+    .first();
+}
+
+export function easyApplyComplexFormWarning(modal: Locator): Locator {
+  // Some forms have dynamic fields that are hard to fill.
+  // Check for presence of fields we can't handle.
+  return modal.locator("[data-test-form-section-complex]").first();
+}

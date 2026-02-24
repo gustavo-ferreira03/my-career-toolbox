@@ -11,14 +11,7 @@ import {
   aboutTextarea,
   saveAboutButton,
 } from "../utils/locators.js";
-
-async function navigateToMyProfile(page: Page): Promise<void> {
-  await page.goto("https://www.linkedin.com/in/me/", {
-    waitUntil: "domcontentloaded",
-    timeout: 15000,
-  });
-  await randomDelay(1000, 2000);
-}
+import { navigateToMyProfile } from "../utils/navigation.js";
 
 export function registerProfileWriteTools(server: McpServer): void {
   server.registerTool(

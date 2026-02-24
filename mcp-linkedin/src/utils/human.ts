@@ -15,17 +15,36 @@ export async function randomDelay(
 
 /**
  * Type text character by character with random delays between keystrokes.
+ * Accepts either a selector string (legacy) or a Locator object.
  */
 export async function humanType(
-  page: import("patchright").Page,
-  selector: string,
-  text: string
+  pageOrLocator: import("patchright").Page | import("patchright").Locator,
+  selectorOrText: string,
+  text?: string,
+  delayMinMs?: number,
+  delayMaxMs?: number
 ): Promise<void> {
-  const element = page.locator(selector);
-  await element.click();
+  // Handle overloaded signatures: humanType(page, selector, text) or humanType(locator, text)
+  let element: import("patchright").Locator;
+
+  if (text === undefined) {
+    // Signature: humanType(locator, text, delayMinMs?, delayMaxMs?)
+    // pageOrLocator is a Locator, selectorOrText is the text
+    element = pageOrLocator as import("patchright").Locator;
+    text = selectorOrText;
+  } else {
+    // Signature: humanType(page, selector, text, delayMinMs?, delayMaxMs?)
+    // pageOrLocator is a Page, selectorOrText is the selector
+    const page = pageOrLocator as import("patchright").Page;
+    element = page.locator(selectorOrText);
+  }
+
+  const minDelay = delayMinMs ?? 30;
+  const maxDelay = delayMaxMs ?? 100;
+
   for (const char of text) {
     await element.pressSequentially(char, {
-      delay: Math.floor(Math.random() * 100) + 30,
+      delay: Math.floor(Math.random() * (maxDelay - minDelay)) + minDelay,
     });
   }
 }
