@@ -26,19 +26,6 @@ templates/      → Structural references (never modify)
 3. **`linkedin-profile-optimizer`** — Methodology for LinkedIn profile optimization.
 4. **`writing-skills`** — Meta-skill for creating/editing other skills.
 
-### Common Workflows
-
-| User wants... | Do this |
-|---|---|
-| Process new input files | Read career-assistant → Process Inputs workflow |
-| Resume for a specific job | Read career-assistant + tailored-resume-generator → Generate Tailored Resume workflow |
-| Optimize LinkedIn | Read career-assistant + linkedin-profile-optimizer → Optimize LinkedIn workflow |
-| Respond to recruiter | Read career-assistant → Respond to Recruiter workflow |
-| Prepare for interview | Read career-assistant → Prepare for Interview workflow |
-| Cover letter | Read career-assistant → Generate Cover Letter workflow |
-| Portfolio content | Read career-assistant → Generate Portfolio workflow |
-| Elevator pitch | Read career-assistant → Generate Elevator Pitch workflow |
-
 ### Key Rules
 
 - **Never modify `templates/`** — They are structural references only
@@ -46,3 +33,4 @@ templates/      → Structural references (never modify)
 - **Never commit `data/` or `profile/`** — They contain personal information
 - **profile/ is the source of truth** — Always read it before generating outputs
 - **Skills are mandatory** — Read the relevant skill before generating any output
+- **Auto-check `data/input/` when profile is incomplete** — If profile/ lacks information needed for a good output, check `data/input/` for PDFs or files to extract and merge into profile/ before generating output
