@@ -92,7 +92,7 @@ Tudo já vem instalado (Node.js, LaTeX, agente).
 | Caso de uso | O que acontece |
 |---|---|
 | **Processar inputs** | Extrai dados dos seus PDFs/arquivos e popula o knowledge base (`profile/`) |
-| **Currículo personalizado** | Lê a vaga + seu perfil e gera currículo tailored (Markdown ou LaTeX/PDF) |
+| **Currículo personalizado** | Lê a vaga + seu perfil e gera currículo tailored (LaTeX/PDF) |
 | **LinkedIn** | Analisa seu perfil e gera conteúdo otimizado para cada seção |
 | **Resposta a recrutador** | Avalia fit com seus objetivos e gera opções de resposta |
 | **Prep de entrevista** | Gera talking points, STAR stories, perguntas para fazer, e gaps para estudar |

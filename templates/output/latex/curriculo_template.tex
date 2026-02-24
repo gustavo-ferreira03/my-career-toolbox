@@ -1,7 +1,14 @@
-\documentclass[10pt, a4paper]{article}
+\documentclass[10pt]{article}
 
-% Page layout
-\usepackage[a4paper, left=0.7cm, top=0.5cm, right=0.7cm, bottom=0.5cm]{geometry}
+% Page layout — width is A4, height adjusts to content automatically
+\usepackage[paperwidth=210mm, paperheight=500mm, left=0.7cm, top=0.5cm, right=0.7cm, bottom=0.5cm, nohead, nofoot]{geometry}
+
+% Auto-adjust page height to content (trims blank space at bottom)
+\AtEndDocument{%
+  \newlength{\contentHeight}%
+  \setlength{\contentHeight}{\dimexpr\pagetotal+1cm\relax}%
+  \pdfpageheight=\contentHeight%
+}
 
 % ATS parsability — ensures text can be extracted from PDF by Applicant Tracking Systems
 \input{glyphtounicode}
@@ -77,6 +84,7 @@
 \name{[SEU NOME COMPLETO]}
 \jobtitle{[Seu Cargo Principal, ex: Desenvolvedor Full Stack]}
 \contact{
+    % Email: use \contactlink{mailto:EMAIL}{EMAIL} — do NOT invent new commands
     \contactlink{mailto:[seu-email@gmail.com]}{[seu-email@gmail.com]} \quad
     \contactlink{https://linkedin.com/in/[seu-usuario]}{linkedin.com/in/[seu-usuario]} \quad
     \contactlink{https://github.com/[seu-usuario]}{github.com/[seu-usuario]}

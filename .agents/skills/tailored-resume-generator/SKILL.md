@@ -255,7 +255,7 @@ For each job requirement:
 **Format**: Output format is **LaTeX ONLY**. Always use `templates/output/latex/curriculo_template.tex` as the base template. Output to `data/output/latex/` and compile with `npm run compile-latex`. See `career-assistant/SKILL.md` for full template details.
 
 **Resume Structure Guidelines**:
-- Keep to 1 page for <10 years experience, 2 pages for 10+ years
+- The LaTeX template auto-adjusts page height (single continuous page, no page breaks). Keep content concise — aim for equivalent of 1 page for <10 years experience, 2 pages for 10+ years
 - Use consistent formatting and spacing
 - Ensure contact information is prominent
 - Use reverse chronological order (most recent first)

@@ -120,7 +120,7 @@ Where you place all generated content:
       - Keep the section formatting and styling
       - Adjust `itemize` bullets for relevance to the job
 11. Compile with `npm run compile-latex` to PDF
-12. **Validate**: Check that compilation succeeded, output is 1 page, and no LaTeX errors appeared. If it failed, fix the `.tex` file and recompile.
+12. **Validate**: Check that compilation succeeded and no LaTeX errors appeared. The template uses auto-adjusting height (single continuous page, no page breaks). If compilation failed, fix the `.tex` file and recompile.
 13. Provide a summary of what was emphasized and any gaps identified
 
 ### 3. Optimize LinkedIn Profile
@@ -221,14 +221,14 @@ When generating a resume in LaTeX format, **ALWAYS use** `templates/output/latex
 ### Template Structure
 
 The template provides:
-- **A4 article-based layout** with `geometry` for precise margin control
+- **A4-width layout with auto-adjusting height** — page height adapts to content (no fixed A4 height, no page breaks)
 - **ATS-optimized** with `glyphtounicode` + `pdfgentounicode=1` for text extraction
 - **Hidden links** (`hidelinks`) — links are clickable but invisible (no blue color, no underline)
 - **Custom commands** for consistency:
   - `\name{Full Name}` — User's name (centered, bold)
   - `\jobtitle{Title}` — Professional headline
   - `\contact{email \quad linkedin \quad github}` — Contact links
-  - `\contactlink{URL}{display text}` — Clickable links (invisible styling)
+  - `\contactlink{URL}{display text}` — Clickable links (invisible styling). For email, use `\contactlink{mailto:email@example.com}{email@example.com}`. Do NOT invent new commands like `\contactlinkmailto` — always use `\contactlink`.
   - `\experienceitem{Company}{Dates}{Position}{domain}{URL}` — Experience entries. The 4th param is the company's website domain (e.g., `primeup.com.br`), NOT location. NEVER put "Remoto", "Híbrido", city names, or any location info here. Leave empty `{}` if no website.
   - `\educationitem{School}{Dates}{Degree}{Location}` — Education entries
 
@@ -268,7 +268,7 @@ LLMs frequently drop the `\` (backslash) from LaTeX commands when generating .te
 2. **NEVER strip `\` from commands** — every LaTeX command starts with `\` (e.g., `\renewcommand`, `\setlength`, `\href`, `\setlist`, `\textbf`). If the backslash is missing, the command becomes visible text.
 3. **Only modify content between `\begin{document}` and `\end{document}`** — the preamble defines formatting and must not be touched.
 4. **After generating the .tex file, scan it** for any command missing its `\` prefix. Common victims: `\renewcommand`, `\setlength`, `\setlist`, `\href`, `\small`, `\textbf`, `\textit`, `\begin`, `\end`.
-5. **After compiling, verify** the PDF has 1 page and no raw LaTeX commands are visible as text.
+5. **After compiling, verify** the PDF compiled without errors and no raw LaTeX commands are visible as text. The template auto-adjusts page height, so the output is always a single continuous page with no page breaks.
 
 ## ⚠️ CRITICAL: Writing Quality for Resumes
 
