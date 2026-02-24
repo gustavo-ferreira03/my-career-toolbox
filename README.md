@@ -77,10 +77,12 @@ Tudo já vem instalado (Node.js, LaTeX, agente).
 │   ├── extract-pdf.ts      ← Extrai texto de PDFs
 │   └── compile-latex.ts    ← Compila LaTeX para PDF
 └── .agents/skills/         ← Skills do agente
-    ├── career-assistant/   ← Skill principal (orquestra tudo)
-    ├── tailored-resume-generator/
-    ├── linkedin-profile-optimizer/
-    └── writing-skills/
+    ├── career-assistant/           ← Skill principal (orquestra tudo)
+    ├── tailored-resume-generator/  ← Personaliza currículo para vagas
+    ├── linkedin-profile-optimizer/ ← Otimiza perfil LinkedIn
+    ├── copywriting/                ← Princípios de escrita persuasiva
+    ├── marketing-psychology/       ← Mental models para persuasão
+    └── writing-skills/             ← Meta-skill para criar skills
 ```
 
 ---

@@ -66,6 +66,14 @@ data/output/             ← You place all generated content here
 - **`linkedin-profile-optimizer`** — Methodology for LinkedIn optimization
 - **`writing-skills`** — Meta-skill for creating/testing other skills (advanced usage)
 
+### Writing & Marketing Quality
+- **`copywriting`** — Expert conversion copywriting principles (clarity, specificity, benefits over features, customer language)
+  - Use when: Rewriting bullets, headlines, or any content that needs more impact
+  - Key principles: Benefits over features, specificity over vagueness, customer language, one idea per section
+- **`marketing-psychology`** — 70+ mental models for persuasion and decision-making
+  - Use when: Structuring arguments, building credibility, creating urgency, explaining value
+  - Key models: Social proof, authority, scarcity, reciprocity, loss aversion, framing, anchoring
+
 ## User Language
 
 The user works in mixed Portuguese/English:

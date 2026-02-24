@@ -268,17 +268,90 @@ Every bullet MUST follow this structure:
 
 **[Verbo de ação no pretérito] + [o que fez com especificidade técnica] + [contexto/escala] + [resultado mensurável]**
 
+### ⚠️ CRITICAL: Naturalidade em Português
+
+**O português NÃO é inglês.** Em inglês, bullets de currículo cortam artigos ("Developed integration between systems"). Em português, isso soa robótico e truncado.
+
+**SEMPRE use artigos, preposições e conectores naturais:**
+
+| ERRADO (telegráfico, soa traduzido) | CORRETO (português natural) |
+|---|---|
+| Projetei integração bidirecional entre Jira e Citsmart | Projetei **uma** integração bidirecional entre **o** Jira e **o** Citsmart |
+| Arquitetei suíte de 120+ testes | Arquitetei **uma** suíte **com mais de** 120 testes |
+| Conduzi campanha de pentest externo com GoPhish | Conduzi **uma** campanha de pentest externo **utilizando o** GoPhish |
+| Automatizei fluxos operacionais internos com scripts Python | Automatizei fluxos operacionais internos com scripts **em** Python |
+| Entreguei solução estável em Vue.js + Laravel para cliente americano | Entreguei **uma** solução estável em Vue.js + Laravel **para um** cliente americano |
+| Desenvolvi módulo de geração automatizada | Desenvolvi **um** módulo de geração automatizada |
+| Liderei ciclo completo do projeto | Liderei **o** ciclo completo do projeto |
+
+**Regras de naturalidade:**
+- SEMPRE colocar artigos indefinidos ("um", "uma") antes de substantivos que estão sendo introduzidos pela primeira vez
+- SEMPRE usar artigos definidos ("o", "a", "os", "as") quando referenciando algo específico ou conhecido
+- Usar preposições completas: "utilizando o", "integrado à", "para um", "com mais de"
+- Evitar abreviações numéricas artificiais como "120+" — preferir "mais de 120"
+- O texto deve soar como algo que uma pessoa brasileira escreveria naturalmente, não como uma tradução automática do inglês
+
+### Copywriting Principles Applied to Resume/LinkedIn Copy
+
+When writing professional bullets and descriptions, follow these **copywriting best practices** from the `copywriting` skill:
+
+1. **Clarity Over Cleverness**
+   - If you have to choose between clear and creative, choose clear
+   - Avoid jargon that only insiders understand
+   
+2. **Benefits Over Features**
+   - Feature: "Implemented automated testing"
+   - Benefit: "Reduced manual QA time by 8 hours per week, catching regressions before production"
+   
+3. **Specificity Over Vagueness**
+   - Vague: "Optimized performance"
+   - Specific: "Reduced API response time from 2.3s to 340ms, improving page load time by 62%"
+   
+4. **Customer/Reader Language Over Company Language**
+   - Mirror the language your reader (hiring manager, recruiter) uses
+   - Avoid internal jargon; use terms people searching for talent understand
+   
+5. **One Idea Per Bullet**
+   - Each bullet should advance ONE key argument
+   - Don't cram multiple achievements into one sentence
+
+### Marketing Psychology Principles for Impact
+
+Apply **psychological principles** from the `marketing-psychology` skill to make bullets more compelling:
+
+**Social Proof** — Show that others/teams rely on or praise your work
+- ✅ "Delivered feature that 50+ internal teams now use daily"
+
+**Authority** — Establish credibility through expertise and results
+- ✅ "Architected resilient system handling 10M+ transactions daily with 99.9% uptime"
+
+**Scarcity/Rarity** — Emphasize if you solved something unique or difficult
+- ✅ "Pioneered first automated integration between proprietary platforms using reverse-engineered APIs"
+
+**Loss Aversion** — Frame in terms of what was prevented/avoided
+- ✅ "Prevented $50K quarterly loss by implementing real-time fraud detection"
+
+**Anchoring** — Lead with impressive numbers to frame context
+- ✅ "Reduced infrastructure costs by $200K annually through Docker optimization" (the $200K anchors perception of scale)
+
+**Commitment & Consistency** — Show sustained effort or long-term impact
+- ✅ "Maintained 99.9% uptime SLA for 2+ years, zero critical incidents"
+
+**Framing** — Same fact, different frame = different impact
+- ❌ "Worked on project that failed"
+- ✅ "Led rapid post-mortem analysis that identified systemic risks, preventing future failures"
+
 ### Examples: Bad vs Good
 
-| Ruim (genérico, vago) | Bom (específico, impactante) |
+| Ruim (genérico, vago) | Bom (específico, impactante, português natural) |
 |---|---|
-| Desenvolvi integração entre sistemas | Projetei e implementei integração bidirecional entre Jira e Citsmart com Spring Boot e arquitetura hexagonal, automatizando a sincronização de 500+ tickets/mês entre as plataformas |
-| Criei testes automatizados | Arquitetei suíte de 120+ testes E2E com Selenium e Cucumber em pipeline automatizado na AWS EC2, garantindo cobertura de regressão em cada deploy |
-| Desenvolvi scripts Python | Automatizei 4 fluxos operacionais com Python (relatórios, validações, migrações de dados), eliminando ~8h/semana de trabalho manual da equipe |
-| Implementei integração com API | Integrei API da OpenAI ao fluxo de trabalho dos usuários, automatizando geração de documentos que antes levava 30min para ser feita em 2min |
-| Desenvolvi funcionalidades em PHP | Desenvolvi módulo de geração automatizada de etiquetas de envio integrado à API dos Correios, processando 200+ remessas/mês com rastreamento em tempo real |
+| Desenvolvi integração entre sistemas | Projetei e implementei uma integração bidirecional entre o Jira e o Citsmart utilizando Spring Boot com arquitetura hexagonal, automatizando a sincronização de tickets e documentos entre as plataformas |
+| Criei testes automatizados | Arquitetei uma suíte com mais de 120 testes E2E usando Selenium e Cucumber, e configurei um pipeline automatizado para execução em uma instância AWS EC2, garantindo cobertura de regressão contínua |
+| Desenvolvi scripts Python | Automatizei fluxos operacionais internos com scripts em Python (validações, relatórios e migrações de dados), eliminando horas semanais de trabalho manual da equipe |
+| Implementei integração com API | Integrei a API da OpenAI ao sistema em produção, automatizando a geração de documentos e reduzindo o tempo de tarefas operacionais dos usuários de minutos para segundos |
+| Desenvolvi funcionalidades em PHP | Desenvolvi um módulo de geração automatizada de etiquetas de envio integrado à API dos Correios, eliminando o processo manual e acelerando a operação logística |
 | Desenvolvimento back-end para projetos | Projetei e entreguei 3 aplicações back-end em Ruby on Rails para clientes reais, do levantamento de requisitos à entrega em produção |
-| SaaS B2B para geração de leads | Criei do zero um SaaS B2B de geração de leads (Next.js + Express + PostgreSQL), incluindo toda a infraestrutura (VPS Linux, CI/CD, monitoramento), hoje utilizado por 5+ empresas em operação diária |
+| SaaS B2B para geração de leads | Criei do zero um SaaS de geração de leads B2B com Next.js, Express.js e PostgreSQL, sendo responsável por toda a arquitetura, o desenvolvimento de APIs, as interfaces e as integrações |
 
 ### Verbos de Ação (PT-BR)
 
@@ -296,8 +369,9 @@ Use ESTES verbos no pretérito perfeito (primeira pessoa). Nunca use "Fui respon
 - **Pessoa**: Primeira pessoa implícita (verbo conjugado, sem "eu")
 - **Tempo verbal**: Pretérito perfeito ("Implementei", "Desenvolvi") para experiências passadas
 - **Termos técnicos**: Manter em inglês (Spring Boot, API REST, CI/CD, Docker, etc.)
-- **Métricas**: SEMPRE incluir números quando possível, mesmo que estimados (quantidade, percentual, tempo economizado, escala)
+- **Métricas**: SEMPRE incluir números quando possível, mesmo que estimados (quantidade, percentual, tempo economizado, escala). Preferir "mais de X" em vez de "X+"
 - **Comprimento**: Cada bullet deve ter 1-2 linhas. Conciso mas rico em detalhes
+- **Naturalidade**: O texto DEVE soar como português brasileiro natural. NUNCA cortar artigos ou preposições no estilo telegráfico de currículo americano. Usar "um", "uma", "o", "a", "os", "as", "para um", "utilizando o", etc.
 
 ### When Profile Data is Vague
 
@@ -323,7 +397,37 @@ If `profile/experience.md` has vague descriptions without metrics:
 3. **Always output to data/output/** — never overwrite input files
 4. **Never commit data/ or profile/** — they contain personal information
 5. **Ask before removing information** — merge is additive by default
-6. **Read the specialized skill** before generating resumes (tailored-resume-generator) or LinkedIn content (linkedin-profile-optimizer)
+6. **Read the specialized skill** before generating:
+   - `tailored-resume-generator` for resume methodology
+   - `linkedin-profile-optimizer` for LinkedIn content
+   - `copywriting` for persuasive copy techniques
+   - `marketing-psychology` for psychological impact
 7. **Be honest about gaps** — if the profile lacks information needed for a good output, tell the user what's missing instead of fabricating content
 8. **NEVER copy profile text literally** — always transform raw facts into compelling, specific, metrics-rich content
 9. **Resume format is LaTeX ONLY** — use `templates/output/latex/curriculo_template.tex`, never Markdown
+
+## How to Read Related Skills
+
+Before generating any professional content (resume, LinkedIn, cover letter, etc.):
+
+### 1. Load `copywriting` skill for:
+- Clarity, specificity, and impact in all writing
+- Understanding the copywriting principles (benefits > features, customer language, etc.)
+- Better headlines and section descriptions
+- Compelling CTAs and closing statements
+
+### 2. Load `marketing-psychology` skill for:
+- Understanding how to frame achievements for maximum impact (anchoring, social proof, authority)
+- Applying psychological principles to make your accomplishments more persuasive
+- Understanding what makes certain messaging compelling vs. forgettable
+- Creating urgency and desire in professional narratives
+
+### Example Workflow
+
+When generating a resume bullet:
+
+1. Read the achievement from `profile/experience.md`
+2. Check the `copywriting` skill → Apply "benefits over features" principle
+3. Check the `marketing-psychology` skill → Apply authority/social proof framing
+4. Write the bullet with natural Portuguese, specificity, and psychological impact
+5. Result: A compelling, clear, metrics-rich bullet that resonates with hiring managers
