@@ -27,6 +27,8 @@ Do NOT attempt to load skills not on this list — they don't exist and will fai
 | `linkedin-profile-optimizer` | LinkedIn optimization |
 | `copywriting` | Persuasive writing (bullets, headlines) |
 | `marketing-psychology` | Impact framing (social proof, authority, anchoring) |
+| `writing-linkedin-posts` | LinkedIn post creation (hooks, formats, voice, engagement) |
+| `linkedin-authority-builder` | LinkedIn content strategy (pillars, positioning, weekly rhythm) |
 | `writing-skills` | Creating/editing skills (advanced) |
 
 Skills like `tech-resume-optimizer`, `resume-ats-optimizer` do NOT exist. Don't try to load them.

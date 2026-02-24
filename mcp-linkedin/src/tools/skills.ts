@@ -6,14 +6,13 @@ import { randomDelay, humanType } from "../utils/human.js";
 import {
   profileSkillsSection,
   skillItems,
-  skillEditButton,
-  skillDeleteButton,
   addSkillButton,
-  skillNameInput,
-  skillModalSaveButton,
   dismissModal,
 } from "../utils/locators.js";
-import { navigateToMyProfile, scrollToLoadSections } from "../utils/navigation.js";
+import {
+  navigateToMyProfile,
+  scrollToLoadSections,
+} from "../utils/navigation.js";
 
 /**
  * Extract visible skill names from the skills section.
@@ -22,25 +21,25 @@ import { navigateToMyProfile, scrollToLoadSections } from "../utils/navigation.j
 async function extractSkillNames(page: Page): Promise<string[]> {
   try {
     const section = profileSkillsSection(page);
-    await section.waitFor({ state: "attached", timeout: 3000 });
+    await section.waitFor({ state: "attached", timeout: 5000 });
     await section.scrollIntoViewIfNeeded({ timeout: 3000 });
     await randomDelay(300, 500);
 
-    // Get all skill items
     const items = skillItems(section);
     const count = await items.count();
 
     const skills: string[] = [];
     for (let i = 0; i < count; i++) {
       const item = items.nth(i);
-      const skillName = await item
-        .locator("span[aria-hidden='true']")
-        .first()
-        .innerText({ timeout: 3000 })
+      // Each skill item has visible text in span[aria-hidden="true"]
+      const spans = item.locator("span[aria-hidden='true']");
+      const firstSpan = spans.first();
+      const text = await firstSpan
+        .innerText({ timeout: 2000 })
         .catch(() => null);
 
-      if (skillName && skillName.trim()) {
-        skills.push(skillName.trim());
+      if (text?.trim()) {
+        skills.push(text.trim());
       }
     }
 
@@ -51,29 +50,26 @@ async function extractSkillNames(page: Page): Promise<string[]> {
 }
 
 export function registerSkillsTools(server: McpServer): void {
-  // -- list_skills tool --
   server.registerTool(
     "list_skills",
     {
       title: "List LinkedIn Skills",
       description:
-        "Reads all skills from your LinkedIn profile's Competências/Skills section. " +
-        "Returns a list of skill names in the order they appear.",
+        "Reads all skills/competencies from your LinkedIn profile. " +
+        "Returns the list of skill names in the order they appear.",
     },
     async () => {
       try {
         const page = await ensureLoggedIn();
         await navigateToMyProfile(page);
-
-        // Scroll to trigger lazy-loading of the skills section
         await scrollToLoadSections(page);
 
-        // Extract skill names
         const skills = await extractSkillNames(page);
 
         const result =
           skills.length > 0
-            ? `Found ${skills.length} skills:\n\n` + skills.map((s, i) => `${i + 1}. ${s}`).join("\n")
+            ? `Found ${skills.length} skills:\n\n` +
+              skills.map((s, i) => `${i + 1}. ${s}`).join("\n")
             : "No skills found on your profile.";
 
         return {
@@ -93,47 +89,74 @@ export function registerSkillsTools(server: McpServer): void {
     }
   );
 
-  // -- add_skill tool --
   server.registerTool(
     "add_skill",
     {
       title: "Add Skill to LinkedIn Profile",
       description:
-        "Adds a new skill to your LinkedIn profile. Opens the Competências section, " +
-        "clicks 'Adicionar' (Add), enters the skill name, and saves.",
+        "Adds a new skill to your LinkedIn profile. Opens the skills modal, " +
+        "enters the skill name, and saves.",
       inputSchema: {
         skillName: z
           .string()
           .min(1)
-          .describe("The name of the skill to add (e.g., 'Python', 'Project Management')"),
+          .describe(
+            "The name of the skill to add (e.g., 'Python', 'Project Management')"
+          ),
       },
     },
     async ({ skillName }) => {
       try {
         const page = await ensureLoggedIn();
         await navigateToMyProfile(page);
-
-        // Scroll to trigger lazy-loading
         await scrollToLoadSections(page);
 
-        // Find and click the "Add skill" button
-        const section = profileSkillsSection(page);
-        await section.waitFor({ state: "visible", timeout: 10000 });
-        const addBtn = addSkillButton(section);
+        // Click the "Add skill" button (page-level, uses aria-label)
+        const addBtn = addSkillButton(page);
         await addBtn.waitFor({ state: "visible", timeout: 5000 });
         await addBtn.click();
         await randomDelay(1000, 2000);
 
-        // Fill in the skill name in the modal
-        const input = skillNameInput(page);
-        await input.waitFor({ state: "visible", timeout: 10000 });
+        // The modal should now be open with an input field.
+        // LinkedIn's add-skill modal has an input with a combobox role
+        // or a text input for the skill name.
+        const modal = page.locator('.artdeco-modal[role="dialog"]').last();
+        await modal.waitFor({ state: "visible", timeout: 5000 });
+
+        // Find the skill name input inside the modal
+        const input = modal
+          .locator(
+            'input[role="combobox"], ' +
+            'input[aria-label*="competência"], ' +
+            'input[aria-label*="skill"], ' +
+            'input[placeholder*="competência"], ' +
+            'input[placeholder*="skill"]'
+          )
+          .first();
+
+        await input.waitFor({ state: "visible", timeout: 5000 });
         await input.click();
         await randomDelay(200, 400);
         await humanType(input, skillName);
-        await randomDelay(500, 1000);
+        await randomDelay(1000, 1500);
 
-        // Save the skill
-        const saveBtn = skillModalSaveButton(page);
+        // Select the first suggestion from the dropdown (if it appears)
+        try {
+          const suggestion = modal
+            .locator('[role="option"], [role="listbox"] li')
+            .first();
+          if (await suggestion.isVisible({ timeout: 2000 })) {
+            await suggestion.click();
+            await randomDelay(500, 800);
+          }
+        } catch {
+          // No dropdown, skill name typed directly
+        }
+
+        // Click Save
+        const saveBtn = modal
+          .getByRole("button", { name: /^(salvar|save)$/i })
+          .first();
         await saveBtn.click();
         await randomDelay(2000, 3000);
 
@@ -159,86 +182,121 @@ export function registerSkillsTools(server: McpServer): void {
     }
   );
 
-  // -- remove_skill tool --
   server.registerTool(
     "remove_skill",
     {
       title: "Remove Skill from LinkedIn Profile",
       description:
-        "Removes a skill from your LinkedIn profile. Searches for the skill by name, " +
-        "clicks the edit button, and deletes it.",
+        "Removes a skill from your LinkedIn profile by name. " +
+        "Navigates to the full skills page and deletes the matching skill.",
       inputSchema: {
         skillName: z
           .string()
           .min(1)
-          .describe("The name of the skill to remove (e.g., 'Python', 'Project Management')"),
+          .describe(
+            "The exact name of the skill to remove (e.g., 'Python')"
+          ),
       },
     },
     async ({ skillName }) => {
       try {
         const page = await ensureLoggedIn();
-        await navigateToMyProfile(page);
 
-        // Scroll to trigger lazy-loading
+        // Navigate to the dedicated skills edit page for better access
+        // The profile skills section has a "Show all X skills" link
+        await navigateToMyProfile(page);
         await scrollToLoadSections(page);
 
-        // Find the skill in the list
         const section = profileSkillsSection(page);
         await section.waitFor({ state: "visible", timeout: 10000 });
-        const items = skillItems(section);
-        const count = await items.count();
 
-        let found = false;
-        for (let i = 0; i < count; i++) {
-          const item = items.nth(i);
-          const skillText = await item
-            .locator("span[aria-hidden='true']")
-            .first()
-            .innerText({ timeout: 3000 })
-            .catch(() => null);
+        // Try to find the "Show all skills" link to get to the full list
+        const showAllLink = section
+          .locator("a")
+          .filter({ hasText: /mostrar todas|show all/i })
+          .first();
 
-          if (skillText && skillText.trim().toLowerCase() === skillName.toLowerCase()) {
-            found = true;
-
-            // Click the edit button for this skill
-            const editBtn = skillEditButton(item);
-            await editBtn.waitFor({ state: "visible", timeout: 5000 });
-            await editBtn.click();
-            await randomDelay(500, 1000);
-
-            // Click the delete button in the dropdown menu
-            const deleteBtn = skillDeleteButton(section);
-            await deleteBtn.waitFor({ state: "visible", timeout: 5000 });
-            await deleteBtn.click();
-            await randomDelay(1000, 2000);
-
-            // Confirm deletion if a confirmation modal appears
-            try {
-              const confirmBtn = page
-                .getByRole("button", { name: /confirmar|confirm|deletar|delete/i })
-                .first();
-              if (await confirmBtn.isVisible({ timeout: 1500 })) {
-                await confirmBtn.click();
-                await randomDelay(2000, 3000);
-              }
-            } catch {
-              // No confirmation modal, deletion likely already done
-            }
-
-            break;
+        try {
+          if (await showAllLink.isVisible({ timeout: 3000 })) {
+            await showAllLink.click();
+            await randomDelay(1500, 2500);
           }
+        } catch {
+          // Already on skills page or no "show all" link
         }
 
-        if (!found) {
+        // Find the skill by name and click its delete/edit button
+        // On the skills detail page, each skill has an edit button
+        const skillItem = page
+          .locator("li, div[class*='skill']")
+          .filter({
+            has: page.locator("span[aria-hidden='true']").filter({
+              hasText: new RegExp(`^${escapeRegex(skillName)}$`, "i"),
+            }),
+          })
+          .first();
+
+        try {
+          await skillItem.waitFor({ state: "visible", timeout: 5000 });
+        } catch {
           return {
             content: [
               {
                 type: "text" as const,
-                text: `Skill "${skillName}" not found in your profile.`,
+                text: `Skill "${skillName}" not found on your profile.`,
               },
             ],
             isError: true,
           };
+        }
+
+        // Click the edit/delete button for this skill
+        // PT-BR: "Deletar competência" / "Excluir"; EN: "Delete skill"
+        const deleteBtn = skillItem
+          .locator(
+            'button[aria-label*="Deletar"], ' +
+            'button[aria-label*="Excluir"], ' +
+            'button[aria-label*="Delete"], ' +
+            'button[aria-label*="Remove"]'
+          )
+          .first();
+
+        try {
+          await deleteBtn.waitFor({ state: "visible", timeout: 3000 });
+          await deleteBtn.click();
+        } catch {
+          // Try finding an overflow menu (three dots) instead
+          const menuBtn = skillItem
+            .locator('button[aria-label*="mais"], button[aria-label*="more"]')
+            .first();
+          await menuBtn.click();
+          await randomDelay(500, 800);
+
+          // Click delete in the dropdown
+          const dropdownDelete = page
+            .locator('[role="menuitem"], [role="option"]')
+            .filter({ hasText: /deletar|excluir|delete|remove/i })
+            .first();
+          await dropdownDelete.click();
+        }
+
+        await randomDelay(1000, 2000);
+
+        // Confirm deletion if a confirmation dialog appears
+        try {
+          const confirmBtn = page
+            .locator('.artdeco-modal[role="dialog"]')
+            .last()
+            .getByRole("button", {
+              name: /confirmar|deletar|excluir|delete|remove|sim|yes/i,
+            })
+            .first();
+          if (await confirmBtn.isVisible({ timeout: 2000 })) {
+            await confirmBtn.click();
+            await randomDelay(2000, 3000);
+          }
+        } catch {
+          // No confirmation needed
         }
 
         return {
@@ -262,4 +320,9 @@ export function registerSkillsTools(server: McpServer): void {
       }
     }
   );
+}
+
+/** Escape a string for use in a RegExp. */
+function escapeRegex(str: string): string {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }

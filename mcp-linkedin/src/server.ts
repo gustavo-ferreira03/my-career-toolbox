@@ -6,11 +6,12 @@ import { registerSkillsTools } from "./tools/skills.js";
 import { registerJobsTools } from "./tools/jobs.js";
 import { registerResumeTools } from "./tools/resume.js";
 import { registerApplyTools } from "./tools/apply.js";
+import { registerPostTools } from "./tools/post.js";
 
 export function createServer(): McpServer {
   const server = new McpServer({
     name: "linkedin",
-    version: "0.1.0",
+    version: "0.2.0",
   });
 
   registerSessionTools(server);
@@ -20,6 +21,7 @@ export function createServer(): McpServer {
   registerJobsTools(server);
   registerResumeTools(server);
   registerApplyTools(server);
+  registerPostTools(server);
 
   return server;
 }

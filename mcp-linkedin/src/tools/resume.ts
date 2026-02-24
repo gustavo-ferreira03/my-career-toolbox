@@ -3,84 +3,86 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { Page } from "patchright";
 import * as fs from "fs";
 import * as path from "path";
+import { fileURLToPath } from "url";
 import { ensureLoggedIn } from "../auth.js";
 import { randomDelay } from "../utils/human.js";
 import { navigateToJobView } from "../utils/navigation.js";
 import {
   jobDetailsTitle,
   jobDetailsDescription,
+  jobDetailsCompany,
   jobDetailsMetadata,
 } from "../utils/locators.js";
 
+// Resolve project root: mcp-linkedin/src/tools/resume.ts -> mcp-linkedin/ -> project root
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const PROJECT_ROOT = path.resolve(__dirname, "..", "..", "..");
+
 /**
  * Extract job details from LinkedIn and save to data/input/ for agent processing.
- * Returns the path to the saved file for the agent to process.
  */
 async function saveJobToInput(
   page: Page,
   jobId: string
-): Promise<{ filePath: string; jobTitle: string } | null> {
+): Promise<{ filePath: string; jobTitle: string; jobText: string } | null> {
   try {
-    // Navigate to the job
     await navigateToJobView(page, jobId);
-    await randomDelay(1500, 2500);
+    await randomDelay(2000, 3000);
 
-    // Extract job details
     const title = await jobDetailsTitle(page)
       .textContent({ timeout: 5000 })
       .catch(() => null);
 
-    const description = await jobDetailsDescription(page)
-      .innerText({ timeout: 5000 })
-      .catch(() => null);
+    if (!title?.trim()) return null;
 
-    const metadata = await jobDetailsMetadata(page)
+    const company = await jobDetailsCompany(page)
       .textContent({ timeout: 5000 })
       .catch(() => null);
 
-    if (!title) {
-      return null;
-    }
+    const metadata = await jobDetailsMetadata(page)
+      .innerText({ timeout: 5000 })
+      .catch(() => null);
 
-    // Construct job details text
-    const jobDetailsText = [
+    const description = await jobDetailsDescription(page)
+      .innerText({ timeout: 8000 })
+      .catch(() => null);
+
+    const lines = [
       `Job ID: ${jobId}`,
+      `URL: https://www.linkedin.com/jobs/view/${jobId}/`,
       `Title: ${title.trim()}`,
-      metadata ? `Company/Location: ${metadata.trim()}` : "",
+      company?.trim() ? `Company: ${company.trim()}` : "",
+      metadata?.trim() ? `Details: ${metadata.trim()}` : "",
       "",
-      `## Job Description`,
+      "## Job Description",
+      "",
       description?.trim() ?? "(No description available)",
-    ]
-      .filter((line) => line !== "")
-      .join("\n");
+    ].filter((l) => l !== "");
 
-    // Ensure data/input directory exists
-    const inputDir = path.resolve(process.cwd(), "data", "input");
-    if (!fs.existsSync(inputDir)) {
-      fs.mkdirSync(inputDir, { recursive: true });
-    }
+    const jobText = lines.join("\n");
 
-    // Save to job-{id}.txt
+    // Save to data/input/job-{id}.txt
+    const inputDir = path.join(PROJECT_ROOT, "data", "input");
+    fs.mkdirSync(inputDir, { recursive: true });
+
     const filePath = path.join(inputDir, `job-${jobId}.txt`);
-    fs.writeFileSync(filePath, jobDetailsText, "utf-8");
+    fs.writeFileSync(filePath, jobText, "utf-8");
 
-    return { filePath, jobTitle: title.trim() };
+    return { filePath, jobTitle: title.trim(), jobText };
   } catch {
     return null;
   }
 }
 
 export function registerResumeTools(server: McpServer): void {
-  // -- generate_tailored_resume tool --
   server.registerTool(
     "generate_tailored_resume",
     {
       title: "Generate Tailored Resume for LinkedIn Job",
       description:
-        "Extracts a job from LinkedIn and generates a tailored LaTeX resume optimized for that specific job. " +
-        "Uses the MCP server to fetch job details from LinkedIn, saves them to data/input/, " +
-        "and triggers the career assistant's tailored resume generator. " +
-        "Returns the path to the generated .tex file ready for compilation.",
+        "Fetches a job posting from LinkedIn and saves it to data/input/ so the " +
+        "career assistant can generate a tailored LaTeX resume. " +
+        "Returns the saved job description and instructions for the agent.",
       inputSchema: {
         jobId: z
           .string()
@@ -89,14 +91,13 @@ export function registerResumeTools(server: McpServer): void {
         outputFileName: z
           .string()
           .optional()
-          .describe("Optional custom output filename (without .tex extension)"),
+          .describe("Custom output filename without .tex extension"),
       },
     },
     async ({ jobId, outputFileName }) => {
       try {
         const page = await ensureLoggedIn();
 
-        // Step 1: Fetch job from LinkedIn and save to data/input/
         const jobData = await saveJobToInput(page, jobId);
 
         if (!jobData) {
@@ -111,43 +112,43 @@ export function registerResumeTools(server: McpServer): void {
           };
         }
 
-        // Step 2: Notify user that job has been saved and next steps
-        const texFileName = outputFileName || `resume-${jobId}`;
+        const texFileName = outputFileName ?? `resume-${jobId}`;
         const outputPath = path.join(
-          process.cwd(),
+          PROJECT_ROOT,
           "data",
           "output",
           "latex",
           `${texFileName}.tex`
         );
 
-        const nextSteps = [
+        const result = [
           `## Job Saved`,
           "",
-          `Job details saved to: ${jobData.filePath}`,
-          `Job Title: ${jobData.jobTitle}`,
+          `File: ${jobData.filePath}`,
+          `Title: ${jobData.jobTitle}`,
+          "",
+          `## Job Description (for context)`,
+          "",
+          jobData.jobText,
           "",
           `## Next Steps`,
           "",
-          `The agent will now use the career assistant's tailored-resume-generator skill to:`,
-          `1. Extract the job requirements from data/input/job-${jobId}.txt`,
-          `2. Match them against your profile in profile/`,
-          `3. Generate a LaTeX resume optimized for this job`,
-          `4. Save to: ${outputPath}`,
-          "",
-          `Expected output file: ${texFileName}.tex`,
-          `Compile with: npm run compile-latex`,
+          `Use the career-assistant and tailored-resume-generator skills to:`,
+          `1. Read the job from ${jobData.filePath}`,
+          `2. Match against profile/`,
+          `3. Generate LaTeX resume to ${outputPath}`,
+          `4. Compile with: npm run compile-latex`,
         ].join("\n");
 
         return {
-          content: [{ type: "text" as const, text: nextSteps }],
+          content: [{ type: "text" as const, text: result }],
         };
       } catch (err) {
         return {
           content: [
             {
               type: "text" as const,
-              text: `Error generating tailored resume: ${err instanceof Error ? err.message : String(err)}`,
+              text: `Error: ${err instanceof Error ? err.message : String(err)}`,
             },
           ],
           isError: true,

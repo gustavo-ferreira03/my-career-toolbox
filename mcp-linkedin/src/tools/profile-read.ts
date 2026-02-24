@@ -28,7 +28,7 @@ async function extractAboutText(
 
     // Try to expand "see more" / "ver mais"
     try {
-      const seeMore = seeMoreButton(section, page);
+      const seeMore = seeMoreButton(section);
       if (await seeMore.isVisible({ timeout: 1500 })) {
         await seeMore.click();
         await randomDelay(300, 600);

@@ -1,6 +1,7 @@
 /**
  * Human-like delays and behavior patterns to avoid bot detection.
  */
+import type { Page, Locator } from "patchright";
 
 /**
  * Wait for a random duration between min and max milliseconds.
@@ -15,35 +16,25 @@ export async function randomDelay(
 
 /**
  * Type text character by character with random delays between keystrokes.
- * Accepts either a selector string (legacy) or a Locator object.
+ * Accepts a Locator -- click + clear the field first, then type.
  */
 export async function humanType(
-  pageOrLocator: import("patchright").Page | import("patchright").Locator,
-  selectorOrText: string,
-  text?: string,
-  delayMinMs?: number,
-  delayMaxMs?: number
+  locator: Locator,
+  text: string,
+  opts: { minDelay?: number; maxDelay?: number; clear?: boolean } = {}
 ): Promise<void> {
-  // Handle overloaded signatures: humanType(page, selector, text) or humanType(locator, text)
-  let element: import("patchright").Locator;
+  const minDelay = opts.minDelay ?? 30;
+  const maxDelay = opts.maxDelay ?? 100;
 
-  if (text === undefined) {
-    // Signature: humanType(locator, text, delayMinMs?, delayMaxMs?)
-    // pageOrLocator is a Locator, selectorOrText is the text
-    element = pageOrLocator as import("patchright").Locator;
-    text = selectorOrText;
-  } else {
-    // Signature: humanType(page, selector, text, delayMinMs?, delayMaxMs?)
-    // pageOrLocator is a Page, selectorOrText is the selector
-    const page = pageOrLocator as import("patchright").Page;
-    element = page.locator(selectorOrText);
+  if (opts.clear) {
+    await locator.click();
+    await locator.selectText();
+    await locator.page().keyboard.press("Backspace");
+    await randomDelay(100, 300);
   }
 
-  const minDelay = delayMinMs ?? 30;
-  const maxDelay = delayMaxMs ?? 100;
-
   for (const char of text) {
-    await element.pressSequentially(char, {
+    await locator.pressSequentially(char, {
       delay: Math.floor(Math.random() * (maxDelay - minDelay)) + minDelay,
     });
   }

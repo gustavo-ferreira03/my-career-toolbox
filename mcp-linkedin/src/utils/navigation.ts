@@ -30,7 +30,24 @@ export async function scrollToLoadSections(page: Page): Promise<void> {
 }
 
 /**
+ * LinkedIn jobs search URL parameter mappings.
+ * LinkedIn uses encoded filter parameters like f_TPR, f_WT, etc.
+ */
+const DATE_POSTED_MAP: Record<string, string> = {
+  "past-24h": "r86400",
+  "past-week": "r604800",
+  "past-month": "r2592000",
+};
+
+const REMOTE_MAP: Record<string, string> = {
+  "on-site": "1",
+  remote: "2",
+  hybrid: "3",
+};
+
+/**
  * Navigate to the LinkedIn jobs search page with query parameters.
+ * Filters are translated to LinkedIn's internal f_ parameters.
  */
 export async function navigateToJobsSearch(
   page: Page,
@@ -41,12 +58,34 @@ export async function navigateToJobsSearch(
   const params = new URLSearchParams();
   params.set("keywords", keywords);
   if (location) params.set("location", location);
+
   if (filters) {
-    Object.entries(filters).forEach(([key, value]) => {
-      if (value) params.set(key, value);
-    });
+    if (filters.datePosted && DATE_POSTED_MAP[filters.datePosted]) {
+      params.set("f_TPR", DATE_POSTED_MAP[filters.datePosted]);
+    }
+    if (filters.remote && REMOTE_MAP[filters.remote]) {
+      params.set("f_WT", REMOTE_MAP[filters.remote]);
+    }
   }
-  await page.goto(`https://www.linkedin.com/jobs/search/?${params}`, {
+
+  await page.goto(
+    `https://www.linkedin.com/jobs/search/?${params.toString()}`,
+    {
+      waitUntil: "domcontentloaded",
+      timeout: 15000,
+    }
+  );
+  await randomDelay(1500, 2500);
+}
+
+/**
+ * Navigate to a specific job posting by ID.
+ */
+export async function navigateToJobView(
+  page: Page,
+  jobId: string
+): Promise<void> {
+  await page.goto(`https://www.linkedin.com/jobs/view/${jobId}/`, {
     waitUntil: "domcontentloaded",
     timeout: 15000,
   });
@@ -54,12 +93,26 @@ export async function navigateToJobsSearch(
 }
 
 /**
- * Navigate to a specific job posting by ID.
+ * Navigate to the LinkedIn feed page.
  */
-export async function navigateToJobView(page: Page, jobId: string): Promise<void> {
-  await page.goto(`https://www.linkedin.com/jobs/view/${jobId}/`, {
+export async function navigateToFeed(page: Page): Promise<void> {
+  await page.goto("https://www.linkedin.com/feed/", {
     waitUntil: "domcontentloaded",
     timeout: 15000,
   });
   await randomDelay(1000, 2000);
+}
+
+/**
+ * Navigate to the logged-in user's activity page (recent posts).
+ */
+export async function navigateToMyActivity(page: Page): Promise<void> {
+  await page.goto(
+    "https://www.linkedin.com/in/me/recent-activity/all/",
+    {
+      waitUntil: "domcontentloaded",
+      timeout: 15000,
+    }
+  );
+  await randomDelay(1500, 2500);
 }

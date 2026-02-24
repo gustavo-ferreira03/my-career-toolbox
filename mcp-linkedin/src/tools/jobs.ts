@@ -4,11 +4,13 @@ import type { Page, Locator } from "patchright";
 import { ensureLoggedIn } from "../auth.js";
 import { randomDelay } from "../utils/human.js";
 import {
-  jobsSearchContainer,
-  jobCards,
+  jobSearchResultsList,
+  jobCardItems,
   jobCardTitle,
+  extractJobId,
   jobDetailsTitle,
   jobDetailsDescription,
+  jobDetailsCompany,
   jobDetailsMetadata,
 } from "../utils/locators.js";
 import {
@@ -16,70 +18,15 @@ import {
   navigateToJobView,
 } from "../utils/navigation.js";
 
-/**
- * Extract job ID from a job card's URL or data attributes.
- * LinkedIn job URLs follow the pattern: /jobs/view/{jobId}/
- */
-async function extractJobIdFromCard(
-  jobCard: Locator,
-  page: Page
-): Promise<string | null> {
-  try {
-    // Try to get the data attribute first
-    const jobId = await jobCard.getAttribute("data-job-id");
-    if (jobId) return jobId;
-
-    // Try to find a link within the card and extract ID from href
-    const link = jobCard.locator("a").first();
-    const href = await link.getAttribute("href");
-    if (href) {
-      const match = href.match(/\/jobs\/view\/(\d+)/);
-      if (match && match[1]) return match[1];
-    }
-
-    return null;
-  } catch {
-    return null;
-  }
-}
-
-/**
- * Extract job details from the job details page.
- */
-async function extractJobDetails(page: Page): Promise<{
-  title: string | null;
-  description: string | null;
-  metadata: string | null;
-}> {
-  try {
-    const title = await jobDetailsTitle(page)
-      .textContent({ timeout: 5000 })
-      .catch(() => null);
-
-    const description = await jobDetailsDescription(page)
-      .innerText({ timeout: 5000 })
-      .catch(() => null);
-
-    const metadata = await jobDetailsMetadata(page)
-      .textContent({ timeout: 5000 })
-      .catch(() => null);
-
-    return { title, description, metadata };
-  } catch {
-    return { title: null, description: null, metadata: null };
-  }
-}
-
 export function registerJobsTools(server: McpServer): void {
-  // -- search_jobs tool --
   server.registerTool(
     "search_jobs",
     {
       title: "Search LinkedIn Jobs",
       description:
         "Searches for jobs on LinkedIn using keywords and optional filters. " +
-        "Returns a list of up to 25 jobs from the first search results page with titles, " +
-        "companies, and job IDs for further inspection.",
+        "Returns a list of up to 25 jobs from the first results page with titles, " +
+        "companies, and job IDs.",
       inputSchema: {
         keywords: z
           .string()
@@ -88,109 +35,109 @@ export function registerJobsTools(server: McpServer): void {
         location: z
           .string()
           .optional()
-          .describe("Job location (optional, e.g., 'São Paulo', 'Remote')"),
+          .describe("Job location (e.g., 'Sao Paulo', 'Remote')"),
         filters: z
           .object({
-            jobType: z.enum(["full-time", "part-time", "contract", "temporary"]).optional(),
-            level: z.enum(["entry", "mid", "senior", "executive"]).optional(),
-            datePosted: z.enum(["past-day", "past-week", "past-month"]).optional(),
+            datePosted: z
+              .enum(["past-24h", "past-week", "past-month"])
+              .optional(),
+            remote: z
+              .enum(["on-site", "remote", "hybrid"])
+              .optional(),
           })
           .optional()
-          .describe("Optional filters for job search"),
+          .describe("Optional search filters"),
       },
     },
     async ({ keywords, location, filters }) => {
       try {
         const page = await ensureLoggedIn();
 
-        // Build filter object for navigation
+        // Navigate to jobs search
         const navFilters: Record<string, string> = {};
-        if (filters?.jobType)
-          navFilters.jobType = filters.jobType;
-        if (filters?.level) navFilters.level = filters.level;
-        if (filters?.datePosted)
-          navFilters.datePosted = filters.datePosted;
+        if (filters?.datePosted) navFilters.datePosted = filters.datePosted;
+        if (filters?.remote) navFilters.remote = filters.remote;
 
-        // Navigate to jobs search with filters
         await navigateToJobsSearch(page, keywords, location, navFilters);
+        await randomDelay(2000, 3000);
 
-        // Wait for results to load
-        await randomDelay(1000, 2000);
-
-        // Extract job cards
-        const container = jobsSearchContainer(page);
-        let found = false;
+        // Wait for the results list
+        const container = jobSearchResultsList(page);
         try {
-          await container.waitFor({ state: "attached", timeout: 5000 });
-          found = true;
+          await container.waitFor({ state: "attached", timeout: 8000 });
         } catch {
-          // Container not found
-        }
-
-        if (!found) {
           return {
             content: [
               {
                 type: "text" as const,
-                text: `No jobs found for "${keywords}" ${location ? `in ${location}` : ""}. Try different keywords or filters.`,
+                text: `No jobs found for "${keywords}"${location ? ` in ${location}` : ""}. Try different keywords or filters.`,
               },
             ],
           };
         }
 
-        // Get all job cards (limit to 25)
-        const cards = jobCards(container);
+        // Extract job cards (limit to 25)
+        const cards = jobCardItems(container);
         const count = Math.min(await cards.count(), 25);
 
-        const jobsList: string[] = [];
-        const jobIds: string[] = [];
+        interface JobResult {
+          title: string;
+          company: string;
+          jobId: string;
+        }
+        const jobs: JobResult[] = [];
 
         for (let i = 0; i < count; i++) {
           const card = cards.nth(i);
 
-          // Extract job title
-          const titleElement = jobCardTitle(card);
-          const title = await titleElement
+          const title = await jobCardTitle(card)
             .textContent({ timeout: 3000 })
             .catch(() => null);
 
-          // Extract job ID
-          const jobId = await extractJobIdFromCard(card, page);
+          const jobId = await extractJobId(card);
 
-          // Extract company name (usually a secondary text in the card)
+          // Company name: try aria-hidden span inside the subtitle area
           const company = await card
-            .locator("[class*='company'], [class*='subtitle']")
+            .locator(
+              "[class*='subtitle'] span[aria-hidden='true'], " +
+              "[class*='company'] span[aria-hidden='true']"
+            )
             .first()
             .textContent({ timeout: 2000 })
             .catch(() => null);
 
-          if (title && jobId) {
-            jobsList.push(
-              `${i + 1}. ${title?.trim() ?? "Unknown"}` +
-                (company ? ` - ${company.trim()}` : "")
-            );
-            jobIds.push(jobId);
+          if (title?.trim() && jobId) {
+            jobs.push({
+              title: title.trim(),
+              company: company?.trim() ?? "",
+              jobId,
+            });
           }
         }
 
-        if (jobsList.length === 0) {
+        if (jobs.length === 0) {
           return {
             content: [
               {
                 type: "text" as const,
-                text: `Search returned results but could not extract job details. Try again.`,
+                text: `Search returned results but could not extract job details. LinkedIn may have changed its layout.`,
               },
             ],
             isError: true,
           };
         }
 
+        const lines = jobs.map(
+          (j, i) =>
+            `${i + 1}. [${j.jobId}] ${j.title}${j.company ? ` -- ${j.company}` : ""}`
+        );
+
         const result = [
-          `Found ${jobsList.length} jobs for "${keywords}" ${location ? `in ${location}` : ""}:`,
+          `Found ${jobs.length} jobs for "${keywords}"${location ? ` in ${location}` : ""}:`,
           "",
-          ...jobsList,
+          ...lines,
           "",
-          "Use get_job_details with the job number or ID for full job description.",
+          "Use get_job_details with a job ID above to see the full description.",
         ].join("\n");
 
         return {
@@ -210,14 +157,12 @@ export function registerJobsTools(server: McpServer): void {
     }
   );
 
-  // -- get_job_details tool --
   server.registerTool(
     "get_job_details",
     {
       title: "Get LinkedIn Job Details",
       description:
-        "Retrieves full job description and details for a specific job by ID. " +
-        "Returns job title, company, location, full description, and other metadata.",
+        "Retrieves full job description and details for a specific job by its LinkedIn ID.",
       inputSchema: {
         jobId: z
           .string()
@@ -229,16 +174,15 @@ export function registerJobsTools(server: McpServer): void {
       try {
         const page = await ensureLoggedIn();
 
-        // Navigate to the job details page
         await navigateToJobView(page, jobId);
+        await randomDelay(2000, 3000);
 
-        // Wait for the job details to load
-        await randomDelay(1500, 2500);
+        // Extract title
+        const title = await jobDetailsTitle(page)
+          .textContent({ timeout: 5000 })
+          .catch(() => null);
 
-        // Extract job details
-        const details = await extractJobDetails(page);
-
-        if (!details.title) {
+        if (!title) {
           return {
             content: [
               {
@@ -250,20 +194,36 @@ export function registerJobsTools(server: McpServer): void {
           };
         }
 
+        // Extract company
+        const company = await jobDetailsCompany(page)
+          .textContent({ timeout: 5000 })
+          .catch(() => null);
+
+        // Extract metadata (location, seniority, etc.)
+        const metadata = await jobDetailsMetadata(page)
+          .innerText({ timeout: 5000 })
+          .catch(() => null);
+
+        // Extract full description
+        const description = await jobDetailsDescription(page)
+          .innerText({ timeout: 8000 })
+          .catch(() => null);
+
         const result = [
-          `## ${details.title?.trim() ?? "Job Title"}`,
+          `## ${title.trim()}`,
           "",
-          details.metadata
-            ? `**Company & Location:** ${details.metadata.trim()}`
-            : "(Company info not found)",
+          company ? `**Company:** ${company.trim()}` : "",
+          metadata ? `**Details:** ${metadata.trim()}` : "",
           "",
-          `## Job Description`,
+          `## Description`,
           "",
-          details.description?.trim() ?? "(Description not found)",
+          description?.trim() ?? "(Description not found)",
           "",
-          `## Job ID`,
-          jobId,
-        ].join("\n");
+          `**Job ID:** ${jobId}`,
+          `**URL:** https://www.linkedin.com/jobs/view/${jobId}/`,
+        ]
+          .filter((l) => l !== "")
+          .join("\n");
 
         return {
           content: [{ type: "text" as const, text: result }],

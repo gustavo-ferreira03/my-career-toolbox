@@ -87,7 +87,7 @@ export function editAboutLink(page: Page): Locator {
     .locator("#navigation-add-edit-deeplink-edit-about")
     .or(
       profileAboutSection(page)
-        .locator('a')
+        .locator("a")
         .filter({ has: page.locator("[data-test-icon='edit-medium']") })
         .first()
     )
@@ -116,7 +116,7 @@ export function saveAboutButton(page: Page): Locator {
 
 // -- "See more" / "Ver mais" button --
 
-export function seeMoreButton(section: Locator, page: Page): Locator {
+export function seeMoreButton(section: Locator): Locator {
   return section
     .getByRole("button", { name: /see more|ver mais/i })
     .first();
@@ -149,140 +149,270 @@ export function profileSkillsSection(page: Page): Locator {
 }
 
 export function skillItems(skillsSection: Locator): Locator {
-  // Skill items are <li> elements within the skills section container
-  return skillsSection.locator("li");
+  // Skill items are <li> elements within the skills section's list
+  return skillsSection.locator("ul li");
 }
 
-export function skillEditButton(skillItem: Locator): Locator {
-  // Each skill has an edit button (pencil icon) in a <button>
-  // PT-BR: "Editar"; EN: "Edit"
-  return skillItem
-    .locator("button")
-    .filter({ hasText: /editar|edit/i })
-    .first();
-}
-
-export function skillDeleteButton(skillEditMenu: Locator): Locator {
-  // After clicking edit button, a dropdown menu appears.
-  // PT-BR: "Deletar"; EN: "Delete"
-  return skillEditMenu
-    .locator("button")
-    .filter({ hasText: /deletar|delete/i })
-    .first();
-}
-
-export function addSkillButton(skillsSection: Locator): Locator {
-  // PT-BR: "Adicionar"; EN: "Add"
-  // Usually appears at the top or bottom of the skills section
-  return skillsSection
-    .locator("button")
-    .filter({ hasText: /adicionar|add/i })
-    .first();
-}
-
-export function skillNameInput(page: Page): Locator {
-  // Modal input for skill name. Uses aria-label or placeholder.
-  // PT-BR: "Nome da competência"; EN: "Skill name"
+export function addSkillButton(page: Page): Locator {
+  // The "Add skill" button lives in the skills section header.
+  // PT-BR: "Adicionar competência"; EN: "Add skill"
+  // Use aria-label for precision instead of broad text matching.
   return page
-    .getByPlaceholder(/nome da competência|skill name/i)
-    .or(page.getByLabel(/nome da competência|skill name/i))
-    .first();
-}
-
-export function skillModalSaveButton(page: Page): Locator {
-  // PT-BR: "Salvar", EN: "Save"
-  return page
-    .locator(".artdeco-modal")
-    .getByRole("button", { name: /^(salvar|save)$/i })
+    .locator(
+      'button[aria-label*="Adicionar competência"], ' +
+      'button[aria-label*="Add skill"]'
+    )
     .first();
 }
 
 // -- Jobs search page --
 
-export function jobsSearchContainer(page: Page): Locator {
-  // Main container for jobs search results
-  return page.locator(".jobs-search__results-list").first();
+export function jobSearchResultsList(page: Page): Locator {
+  // The main <ul> containing job result cards.
+  // LinkedIn uses scaffold-layout__list-container for the authenticated view.
+  return page
+    .locator(".scaffold-layout__list-container ul")
+    .first();
 }
 
-export function jobCards(jobsSearchContainer: Locator): Locator {
-  // Individual job card items
-  // Usually <div> with role="option" or <li>
-  return jobsSearchContainer.locator("[role='option']").or(
-    jobsSearchContainer.locator("li")
-  );
+export function jobCardItems(container: Locator): Locator {
+  // Direct <li> children of the results list.
+  return container.locator(":scope > li");
 }
 
 export function jobCardTitle(jobCard: Locator): Locator {
-  // Job title within a card
-  // Usually an <h3> or span with the job title
-  return jobCard.locator("h3, [class*='job-card-title']").first();
+  // Job title is an <a> with class containing "job-card" and a nested <span>
+  // or a direct <strong> / <a> inside the card.
+  return jobCard
+    .locator("a[class*='job-card'] strong, a[class*='job-card'] span[aria-hidden='true']")
+    .first();
 }
 
-export function jobIdFromCard(jobCard: Locator): Promise<string | null> {
-  // Extract job ID from the job card's data attributes or href
-  // Jobs have data-job-id or similar
-  return jobCard.getAttribute("data-job-id");
+/**
+ * Extract job ID from a job card element.
+ * LinkedIn job cards have data-occludable-job-id or a link to /jobs/view/{id}/.
+ */
+export async function extractJobId(jobCard: Locator): Promise<string | null> {
+  try {
+    // Try data attribute first (most reliable)
+    const occludable = await jobCard.getAttribute("data-occludable-job-id");
+    if (occludable) return occludable;
+
+    // Try the link href
+    const link = jobCard.locator("a[href*='/jobs/view/']").first();
+    const href = await link.getAttribute("href").catch(() => null);
+    if (href) {
+      const match = href.match(/\/jobs\/view\/(\d+)/);
+      if (match?.[1]) return match[1];
+    }
+
+    return null;
+  } catch {
+    return null;
+  }
 }
 
 // -- Job details page --
 
 export function jobDetailsTitle(page: Page): Locator {
-  // Job title on the job details page
-  return page.locator(".jobs-details h1").first();
+  // The job title is in an <h1> on the details panel.
+  // LinkedIn uses different containers depending on the view.
+  return page
+    .locator(
+      ".job-details-jobs-unified-top-card__job-title h1, " +
+      ".jobs-unified-top-card__job-title, " +
+      ".t-24.job-details-jobs-unified-top-card__job-title"
+    )
+    .first();
 }
 
 export function jobDetailsDescription(page: Page): Locator {
-  // Job description/about section
-  return page.locator(".jobs-details__main-content").first();
+  // The job description container.
+  return page
+    .locator(
+      "#job-details, " +
+      ".jobs-description__content, " +
+      ".jobs-description-content"
+    )
+    .first();
+}
+
+export function jobDetailsCompany(page: Page): Locator {
+  // Company name link in the job details top card.
+  return page
+    .locator(
+      ".job-details-jobs-unified-top-card__company-name a, " +
+      ".jobs-unified-top-card__company-name a"
+    )
+    .first();
 }
 
 export function jobDetailsMetadata(page: Page): Locator {
-  // Container with company name, location, seniority, etc.
-  return page.locator(".jobs-details-top-card__company-name").first();
+  // Container with location, seniority, etc.
+  return page
+    .locator(
+      ".job-details-jobs-unified-top-card__primary-description-container, " +
+      ".jobs-unified-top-card__subtitle-primary-grouping"
+    )
+    .first();
 }
 
-export function easyApplyButton(page: Page): Locator {
-  // PT-BR: "Candidatar-se"; EN: "Easy Apply"
-  // Usually a primary button in the job details
+// -- Post creation (feed page) --
+
+export function startPostButton(page: Page): Locator {
+  // PT-BR: "Comece uma publicação" (2025+), older: "Criar publicação"
+  // EN: "Start a post"
+  // The button is on the feed page, above the post area.
   return page
-    .getByRole("button", { name: /candidatar|easy apply/i })
+    .getByRole("button", {
+      name: /comece.*publica|criar.*publica|iniciar.*publica|start a post/i,
+    })
+    .first();
+}
+
+export function postEditorDiv(page: Page): Locator {
+  // The post editor is a Quill-based contenteditable div with class "ql-editor".
+  // Use the less-specific selector since the parent class may change.
+  return page
+    .locator(".ql-editor")
+    .first();
+}
+
+export function postSubmitButton(page: Page): Locator {
+  // PT-BR: "Publicar"; EN: "Post"
+  // The button that publishes the post.
+  // Be specific: match the submit button in the share box, not any "Post" text.
+  return page
+    .locator('.share-actions__primary-action')
+    .or(
+      page
+        .getByRole("button", { name: /^(publicar|post)$/i })
+        .first()
+    )
+    .first();
+}
+
+export function postModal(page: Page): Locator {
+  // The post creation modal/overlay.
+  return page
+    .locator('.share-box--is-open, .share-creation-state')
+    .first();
+}
+
+// -- Post activity feed (own profile) --
+
+export function profileActivitySection(page: Page): Locator {
+  // PT-BR: "Atividade"; EN: "Activity"
+  return page
+    .locator("section")
+    .filter({
+      has: page.locator("h2").filter({ hasText: /Atividade|Activity/i }),
+    })
+    .first();
+}
+
+export function activityPostItems(page: Page): Locator {
+  // Post items on the activity page (/in/{username}/recent-activity/all/).
+  // Each post is inside a .feed-shared-update-v2 container.
+  return page.locator(".feed-shared-update-v2").locator("visible=true");
+}
+
+export function postTextContent(postItem: Locator): Locator {
+  // The text body of a post in the feed.
+  return postItem
+    .locator(
+      ".feed-shared-update-v2__description, " +
+      ".update-components-text, " +
+      '[data-ad-preview="message"]'
+    )
+    .first();
+}
+
+export function postSocialCounts(postItem: Locator): Locator {
+  // The social counts bar (reactions, comments) below a post.
+  return postItem
+    .locator(
+      ".social-details-social-counts, " +
+      ".feed-shared-social-counts"
+    )
+    .first();
+}
+
+// -- Easy Apply --
+
+export function easyApplyButton(page: Page): Locator {
+  // PT-BR: "Candidatura simplificada"; EN: "Easy Apply"
+  // The button contains a specific icon + text. Match both.
+  return page
+    .getByRole("button", { name: /candidatura simplificada|easy apply/i })
     .first();
 }
 
 // -- Easy Apply modal --
 
 export function easyApplyModal(page: Page): Locator {
-  // The modal dialog container for Easy Apply form
-  return page.locator(".artdeco-modal").first();
-}
-
-export function easyApplyFormField(modal: Locator, label: string): Locator {
-  // Generic form field in Easy Apply modal by label text
-  // label: "name", "email", "phone", "message", etc.
-  return modal.getByLabel(new RegExp(label, "i")).first();
+  // The Easy Apply modal has a specific header with the job title.
+  // Use the modal that contains the Easy Apply form elements.
+  // PT-BR: "Candidatura simplificada"; EN: "Easy Apply"
+  return page
+    .locator('.artdeco-modal[role="dialog"]')
+    .filter({
+      has: page.locator(
+        'h2[id*="easy-apply"], [class*="jobs-easy-apply"]'
+      ),
+    })
+    .first()
+    // Fallback: if the specific filter doesn't match, grab the top-most modal
+    .or(page.locator('.artdeco-modal[role="dialog"]').last());
 }
 
 export function easyApplyFileInput(modal: Locator): Locator {
-  // File upload input in Easy Apply modal
+  // File upload input in Easy Apply modal (usually hidden, use setInputFiles)
   return modal.locator('input[type="file"]').first();
 }
 
 export function easyApplyNextButton(modal: Locator): Locator {
-  // PT-BR: "Próximo"; EN: "Next"
+  // PT-BR: "Avançar" / "Próximo"; EN: "Next"
   return modal
-    .getByRole("button", { name: /próximo|next/i })
+    .getByRole("button", { name: /avançar|próximo|next/i })
+    .first();
+}
+
+export function easyApplyReviewButton(modal: Locator): Locator {
+  // PT-BR: "Revisar" / "Verificar"; EN: "Review"
+  return modal
+    .getByRole("button", { name: /revisar|verificar|review/i })
     .first();
 }
 
 export function easyApplySubmitButton(modal: Locator): Locator {
-  // PT-BR: "Enviar candidatura"; EN: "Submit application" / "Submit"
+  // PT-BR: "Enviar candidatura"; EN: "Submit application"
+  // Be specific to avoid matching "Enviar mensagem" etc.
   return modal
-    .getByRole("button", { name: /enviar|submit/i })
+    .getByRole("button", {
+      name: /enviar candidatura|submit application/i,
+    })
     .first();
 }
 
-export function easyApplyComplexFormWarning(modal: Locator): Locator {
-  // Some forms have dynamic fields that are hard to fill.
-  // Check for presence of fields we can't handle.
-  return modal.locator("[data-test-form-section-complex]").first();
+// -- Post deletion --
+
+export function postMenuButton(postItem: Locator): Locator {
+  // The three-dot menu button on a post.
+  // PT-BR: "Mais ações"; EN: "More options" / "More actions"
+  return postItem
+    .locator('button[aria-label*="Mais"], button[aria-label*="More"]')
+    .or(postItem.locator('.feed-shared-control-menu__trigger, [aria-label*="mais ações"]'))
+    .first();
+}
+
+export function deletePostButton(page: Page): Locator {
+  // The "Delete" option in the post control menu dropdown.
+  // It's an <li> with class feed-shared-control-menu__item.
+  // Must scope to menu items to avoid matching the post wrapper <li>.
+  // PT-BR: "Excluir publicação"; EN: "Delete post"
+  return page
+    .locator("li.feed-shared-control-menu__item")
+    .filter({ hasText: /excluir|deletar|delete/i })
+    .first();
 }
