@@ -6,16 +6,21 @@ Este repositório foi construído **especificamente para ser operado por agentes
 
 **ANTES de tomar qualquer ação sobre carreira do usuário, você DEVE:**
 
-1. **Ler as skills relevantes** em `.agents/skills/`:
-   - `tech-resume-optimizer/SKILL.md` - Para otimizar currículos técnicos
-   - `resume-ats-optimizer/SKILL.md` - Para currículos ATS-compliant
-   - `linkedin-profile-optimizer/SKILL.md` - Para perfis LinkedIn
-   - `copywriting/SKILL.md` - Para redação profissional e impactante
-   - `writing-skills/SKILL.md` - Para regras de tom e voz
+1. **Ler as skills relevantes** que estão **NESTE REPOSITÓRIO** em `.agents/skills/`:
+   - `.agents/skills/tech-resume-optimizer/SKILL.md` - Para otimizar currículos técnicos
+   - `.agents/skills/resume-ats-optimizer/SKILL.md` - Para currículos ATS-compliant
+   - `.agents/skills/linkedin-profile-optimizer/SKILL.md` - Para perfis LinkedIn
+   - `.agents/skills/copywriting/SKILL.md` - Para redação profissional e impactante
+   - `.agents/skills/writing-skills/SKILL.md` - Para regras de tom e voz
 
-2. **NÃO inicie nenhuma redação ou otimização** sem antes ter consultado as skills
-3. **Aplique 100% das metodologias** descritas nas skills - não ignore nada
-4. **Siga as métricas, fórmulas e exemplos** fornecidos nas skills
+2. **NÃO procure skills em lugar nenhum além deste repositório**
+   - ❌ Não use skills do home do usuário
+   - ❌ Não use skills de fora
+   - ✅ Use APENAS `.agents/skills/` deste repositório
+
+3. **NÃO inicie nenhuma redação ou otimização** sem antes ter consultado as skills
+4. **Aplique 100% das metodologias** descritas nas skills - não ignore nada
+5. **Siga as métricas, fórmulas e exemplos** fornecidos nas skills
 
 ### Por Que Skills São Obrigatórias?
 - Contêm metodologias profissionais testadas
