@@ -5,6 +5,17 @@ description: Analyzes job descriptions and generates tailored resumes that highl
 
 # Tailored Resume Generator
 
+## ⛔ CRITICAL: Output Format Override
+
+**This skill is for METHODOLOGY ONLY.** The Markdown example below is OUTDATED and must NOT be used as output format.
+
+- **ALWAYS output in LaTeX** using `templates/output/latex/curriculo_template.tex`
+- **IGNORE** the Markdown example in this file — it shows content structure only
+- **IGNORE** the "Format Options" section below — LaTeX is the only format
+- See `career-assistant/SKILL.md` for the actual output rules, LaTeX template details, and PT-BR writing quality guidelines
+
+---
+
 ## When to Use This Skill
 
 - Applying for a specific job position
@@ -94,6 +105,10 @@ My background:
 ```
 
 **Generated Output:**
+
+> **⛔ FORMAT WARNING**: The example below is Markdown for readability only.
+> **NEVER output resumes in Markdown.** ALWAYS use LaTeX with `templates/output/latex/curriculo_template.tex`.
+> Use this example ONLY to understand content structure and tailoring methodology.
 
 ```markdown
 # JOHN DOE
@@ -237,10 +252,7 @@ For each job requirement:
 
 ### 6. Format and Present
 
-**Format Options**:
-- **Markdown**: Clean, readable, easy to copy
-- **Plain Text**: ATS-optimized, safe for all systems
-- **Tips for Word/PDF**: Provide formatting guidance
+**Format**: Output format is **LaTeX ONLY**. Always use `templates/output/latex/curriculo_template.tex` as the base template. Output to `data/output/latex/` and compile with `npm run compile-latex`. See `career-assistant/SKILL.md` for full template details.
 
 **Resume Structure Guidelines**:
 - Keep to 1 page for <10 years experience, 2 pages for 10+ years

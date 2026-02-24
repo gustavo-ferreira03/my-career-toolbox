@@ -25,12 +25,22 @@ data/output/    → Generated outputs (resumes, cover letters, etc.)
 templates/      → Structural references (never modify)
 ```
 
-### Available Skills
+### ⛔ Resumes are LaTeX ONLY
+
+**NEVER generate Markdown resumes.** Always use `templates/output/latex/curriculo_template.tex` as the base. Output `.tex` to `data/output/latex/`, then compile with `npm run compile-latex`.
+
+The `tailored-resume-generator` skill shows Markdown examples — **IGNORE its format, use LaTeX.**
+
+### Available Skills (ONLY these exist)
 
 1. **`career-assistant`** — Main skill. Orchestrates everything. READ THIS FIRST.
-2. **`tailored-resume-generator`** — Methodology for tailoring resumes to job descriptions.
+2. **`tailored-resume-generator`** — Methodology for tailoring resumes (ignore its Markdown format).
 3. **`linkedin-profile-optimizer`** — Methodology for LinkedIn profile optimization.
-4. **`writing-skills`** — Meta-skill for creating/editing other skills.
+4. **`copywriting`** — Persuasive writing principles (bullets, headlines).
+5. **`marketing-psychology`** — Impact framing (social proof, authority, anchoring).
+6. **`writing-skills`** — Meta-skill for creating/editing other skills.
+
+Do NOT try to load `tech-resume-optimizer`, `resume-ats-optimizer`, or any skill not listed above.
 
 ### Key Rules
 
