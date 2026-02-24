@@ -12,6 +12,8 @@ Glob **silently returns empty results** in this project. You will think files do
 
 **NEVER generate Markdown resumes.** Always use `templates/output/latex/curriculo_template.tex` as the base. Output `.tex` to `data/output/latex/`, then compile with `npm run compile-latex`.
 
+**Copy the preamble (everything before `\begin{document}`) VERBATIM from the template. Only modify content between `\begin{document}` and `\end{document}`. NEVER strip `\` from LaTeX commands.**
+
 The `tailored-resume-generator` skill shows Markdown examples — **IGNORE its format, use LaTeX.**
 
 ### 3. Only these skills exist
@@ -48,7 +50,7 @@ A **professional knowledge management system** (not a resume builder):
 ## Critical Rules
 
 1. **`profile/` is the source of truth** — always read it before generating outputs
-2. **Auto-check `data/input/`** — if `profile/` seems empty or incomplete, check `data/input/` for files to extract before telling the user you have no data
+2. **ALWAYS process `data/input/` first** — before generating ANY output, check `data/input/` for unprocessed files and extract them into `profile/`. Do NOT skip this even if `profile/` already has data.
 3. **Never modify `templates/`** — structural references only
 4. **Always output to `data/output/`** — never overwrite inputs
 5. **Never commit `data/` or `profile/`** — they contain personal information

@@ -98,7 +98,7 @@ Where you place all generated content:
 
 **Steps**:
 1. Read the job description (from `data/input/vagas/`, pasted text, or URL)
-2. **If profile/ lacks information**, check `data/input/` for PDFs or text files and extract/merge them into profile/ first
+2. **ALWAYS check `data/input/`** for PDFs, text files, or any unprocessed documents. Extract and merge them into `profile/` BEFORE generating. Do NOT skip this step even if `profile/` already has data — there may be new files.
 3. Read all relevant `profile/` files (especially `experience.md`, `skills.md`, `projects.md`)
 4. Load the `tailored-resume-generator` skill for methodology
 5. Load the `copywriting` skill for persuasive writing principles
@@ -113,12 +113,15 @@ Where you place all generated content:
    - Each bullet tells a story: problem → solution → impact
 10. Output to `data/output/latex/`:
     - **ALWAYS generate in LaTeX format** using `templates/output/latex/curriculo_template.tex` as the structural base
+      - **Copy the ENTIRE preamble verbatim** (everything before `\begin{document}`). Do NOT rewrite, rephrase, or regenerate it. Copy it character-for-character.
+      - Only modify content BETWEEN `\begin{document}` and `\end{document}`
       - Replace placeholders with actual content
       - Preserve the custom commands (`\name`, `\jobtitle`, `\contact`, `\contactlink`, `\experienceitem`, `\educationitem`)
       - Keep the section formatting and styling
       - Adjust `itemize` bullets for relevance to the job
 11. Compile with `npm run compile-latex` to PDF
-12. Provide a summary of what was emphasized and any gaps identified
+12. **Validate**: Check that compilation succeeded, output is 1 page, and no LaTeX errors appeared. If it failed, fix the `.tex` file and recompile.
+13. Provide a summary of what was emphasized and any gaps identified
 
 ### 3. Optimize LinkedIn Profile
 
@@ -226,7 +229,7 @@ The template provides:
   - `\jobtitle{Title}` — Professional headline
   - `\contact{email \quad linkedin \quad github}` — Contact links
   - `\contactlink{URL}{display text}` — Clickable links (invisible styling)
-  - `\experienceitem{Company}{Dates}{Position}{domain}{URL}` — Experience entries
+  - `\experienceitem{Company}{Dates}{Position}{domain}{URL}` — Experience entries. The 4th param is the company's website domain (e.g., `primeup.com.br`), NOT location. NEVER put "Remoto", "Híbrido", city names, or any location info here. Leave empty `{}` if no website.
   - `\educationitem{School}{Dates}{Degree}{Location}` — Education entries
 
 ### How to Use
@@ -255,6 +258,17 @@ The template provides:
 - ✅ Use the custom commands
 - ✅ Tailor bullets to the specific job
 - ✅ Always output `.tex` + compiled `.pdf`
+
+### ⚠️ CRITICAL: LaTeX Syntax Integrity
+
+LLMs frequently drop the `\` (backslash) from LaTeX commands when generating .tex files, which causes raw command names to appear as visible text in the PDF (e.g., `renewcommand0pt` instead of the command being executed).
+
+**Rules**:
+1. **Copy the preamble VERBATIM** — everything before `\begin{document}` must be an exact copy from the template. Do not regenerate it.
+2. **NEVER strip `\` from commands** — every LaTeX command starts with `\` (e.g., `\renewcommand`, `\setlength`, `\href`, `\setlist`, `\textbf`). If the backslash is missing, the command becomes visible text.
+3. **Only modify content between `\begin{document}` and `\end{document}`** — the preamble defines formatting and must not be touched.
+4. **After generating the .tex file, scan it** for any command missing its `\` prefix. Common victims: `\renewcommand`, `\setlength`, `\setlist`, `\href`, `\small`, `\textbf`, `\textit`, `\begin`, `\end`.
+5. **After compiling, verify** the PDF has 1 page and no raw LaTeX commands are visible as text.
 
 ## ⚠️ CRITICAL: Writing Quality for Resumes
 

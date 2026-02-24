@@ -245,7 +245,7 @@ For each job requirement:
 
 - Use standard section headings (Professional Experience, Education, Skills)
 - Incorporate exact keywords from job description naturally
-- Avoid tables, graphics, headers/footers, or complex formatting
+- Avoid graphics or images (tables and headers/footers from the LaTeX template are fine — they are ATS-compatible)
 - Use standard fonts and bullet points
 - Include both acronyms and full terms (e.g., "SQL (Structured Query Language)")
 - Match job title terminology where truthful

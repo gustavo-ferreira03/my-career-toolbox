@@ -29,6 +29,8 @@ templates/      → Structural references (never modify)
 
 **NEVER generate Markdown resumes.** Always use `templates/output/latex/curriculo_template.tex` as the base. Output `.tex` to `data/output/latex/`, then compile with `npm run compile-latex`.
 
+**Copy the preamble (everything before `\begin{document}`) VERBATIM from the template. Only modify content between `\begin{document}` and `\end{document}`. NEVER strip `\` from LaTeX commands.**
+
 The `tailored-resume-generator` skill shows Markdown examples — **IGNORE its format, use LaTeX.**
 
 ### Available Skills (ONLY these exist)
@@ -49,5 +51,5 @@ Do NOT try to load `tech-resume-optimizer`, `resume-ats-optimizer`, or any skill
 - **Never commit `data/` or `profile/`** — They contain personal information
 - **profile/ is the source of truth** — Always read it before generating outputs
 - **Skills are mandatory** — Read the relevant skill before generating any output
-- **Auto-check `data/input/` when profile is incomplete** — If profile/ lacks information needed for a good output, check `data/input/` for PDFs or files to extract and merge into profile/ before generating output
+- **ALWAYS process `data/input/` first** — Before generating ANY output, check `data/input/` for unprocessed files and extract them into `profile/`. Do NOT skip this even if `profile/` already has data.
 - **DO NOT use glob** — It frequently fails. Use `find` or `ls` commands instead when checking for files
