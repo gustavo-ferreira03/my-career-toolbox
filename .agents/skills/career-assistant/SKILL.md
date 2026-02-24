@@ -246,12 +246,74 @@ The template provides:
 - ✅ Tailor bullets to the specific job
 - ✅ Always output `.tex` + compiled `.pdf`
 
+## ⚠️ CRITICAL: Writing Quality for Resumes
+
+The `tailored-resume-generator` skill is written in English and its examples are in English.
+**IGNORE its writing style and examples when generating content in Portuguese.**
+Use ONLY the rules below for Portuguese resume writing.
+
+### Golden Rule
+
+**NEVER copy bullets from `profile/experience.md` literally.**
+The profile stores raw facts. Your job is to TRANSFORM them into compelling, metrics-rich resume bullets.
+
+If the profile says something vague like "Desenvolvi scripts Python que otimizaram fluxos internos", you MUST:
+1. First, check if there are more details elsewhere in the profile
+2. If not, **infer reasonable details** from context (company size, project type, technologies)
+3. Rewrite with specificity and impact
+
+### Bullet Formula (PT-BR)
+
+Every bullet MUST follow this structure:
+
+**[Verbo de ação no pretérito] + [o que fez com especificidade técnica] + [contexto/escala] + [resultado mensurável]**
+
+### Examples: Bad vs Good
+
+| Ruim (genérico, vago) | Bom (específico, impactante) |
+|---|---|
+| Desenvolvi integração entre sistemas | Projetei e implementei integração bidirecional entre Jira e Citsmart com Spring Boot e arquitetura hexagonal, automatizando a sincronização de 500+ tickets/mês entre as plataformas |
+| Criei testes automatizados | Arquitetei suíte de 120+ testes E2E com Selenium e Cucumber em pipeline automatizado na AWS EC2, garantindo cobertura de regressão em cada deploy |
+| Desenvolvi scripts Python | Automatizei 4 fluxos operacionais com Python (relatórios, validações, migrações de dados), eliminando ~8h/semana de trabalho manual da equipe |
+| Implementei integração com API | Integrei API da OpenAI ao fluxo de trabalho dos usuários, automatizando geração de documentos que antes levava 30min para ser feita em 2min |
+| Desenvolvi funcionalidades em PHP | Desenvolvi módulo de geração automatizada de etiquetas de envio integrado à API dos Correios, processando 200+ remessas/mês com rastreamento em tempo real |
+| Desenvolvimento back-end para projetos | Projetei e entreguei 3 aplicações back-end em Ruby on Rails para clientes reais, do levantamento de requisitos à entrega em produção |
+| SaaS B2B para geração de leads | Criei do zero um SaaS B2B de geração de leads (Next.js + Express + PostgreSQL), incluindo toda a infraestrutura (VPS Linux, CI/CD, monitoramento), hoje utilizado por 5+ empresas em operação diária |
+
+### Verbos de Ação (PT-BR)
+
+Use ESTES verbos no pretérito perfeito (primeira pessoa). Nunca use "Fui responsável por" ou "Participei de":
+
+**Construção/Desenvolvimento**: Projetei, Arquitetei, Desenvolvi, Implementei, Construí, Criei, Configurei
+**Liderança**: Liderei, Coordenei, Gerenciei, Orientei, Conduzi, Organizei
+**Otimização**: Otimizei, Automatizei, Refatorei, Reduzi, Acelerei, Simplifiquei, Eliminei
+**Entrega**: Entreguei, Implantei, Migrei, Lancei, Integrei, Disponibilizei
+**Análise**: Identifiquei, Diagnostiquei, Mapeei, Avaliei, Investiguei
+
+### Tone Rules (PT-BR)
+
+- **Tom**: Profissional, direto, confiante — sem ser arrogante
+- **Pessoa**: Primeira pessoa implícita (verbo conjugado, sem "eu")
+- **Tempo verbal**: Pretérito perfeito ("Implementei", "Desenvolvi") para experiências passadas
+- **Termos técnicos**: Manter em inglês (Spring Boot, API REST, CI/CD, Docker, etc.)
+- **Métricas**: SEMPRE incluir números quando possível, mesmo que estimados (quantidade, percentual, tempo economizado, escala)
+- **Comprimento**: Cada bullet deve ter 1-2 linhas. Conciso mas rico em detalhes
+
+### When Profile Data is Vague
+
+If `profile/experience.md` has vague descriptions without metrics:
+
+1. **Infer from context**: If the user worked at a company for 2 years, they likely shipped significant features. If they built an automation, it likely saved measurable time.
+2. **Use reasonable estimates**: "~500 tickets/mês", "~8h/semana", "5+ empresas" — estimates are fine if they're reasonable and based on context clues in the profile.
+3. **Add technical depth**: Even if the profile just says "Spring Boot", you know it involves dependency injection, REST controllers, service layers, etc. Add relevant technical specificity.
+4. **NEVER fabricate**: Estimates are OK. Making up achievements that have no basis in the profile is NOT OK.
+
 ## Language Guidelines
 
 - The knowledge base (`profile/`) uses mixed language: Portuguese for narrative, English for technical terms
 - Generate outputs in the language the user requests (default: same language as the conversation)
-- Job descriptions in English → output in English
-- Job descriptions in Portuguese → output in Portuguese
+- Job descriptions in English → output in English (use standard American resume conventions)
+- Job descriptions in Portuguese → output in Portuguese (use the PT-BR writing rules above)
 - When in doubt, ask the user
 
 ## Important Rules
@@ -263,3 +325,5 @@ The template provides:
 5. **Ask before removing information** — merge is additive by default
 6. **Read the specialized skill** before generating resumes (tailored-resume-generator) or LinkedIn content (linkedin-profile-optimizer)
 7. **Be honest about gaps** — if the profile lacks information needed for a good output, tell the user what's missing instead of fabricating content
+8. **NEVER copy profile text literally** — always transform raw facts into compelling, specific, metrics-rich content
+9. **Resume format is LaTeX ONLY** — use `templates/output/latex/curriculo_template.tex`, never Markdown
