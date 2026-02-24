@@ -1,71 +1,137 @@
-# Instruções para Agentes de IA (AGENTS.md)
+# Instruções para Agentes de IA
 
-Este repositório é projetado ESPECIFICAMENTE para ser operado por Agentes de Inteligência Artificial (como Cursor, Copilot, Cline, ou Opencode). O objetivo principal é automatizar a otimização de perfis do LinkedIn e a geração de currículos em LaTeX e Markdown.
+Este repositório foi construído **especificamente para ser operado por agentes de inteligência artificial** (Cursor, Copilot, Cline, OpenCode, etc). O objetivo é automatizar a otimização de perfis do LinkedIn e a geração de currículos em LaTeX e Markdown.
 
-Como um Agente atuando neste repositório, você DEVE seguir as diretrizes abaixo para garantir a segurança dos dados do usuário, o uso do contexto correto, e a qualidade da geração final.
+## O Fluxo de Trabalho Obrigatório
 
----
+Quando o usuário pedir para gerar, otimizar ou reescrever um currículo/perfil, siga **estas etapas nesta ordem exata**:
 
-## 1. O Fluxo de Trabalho (Workflow) Exigido
+### Etapa 1: Coleta Automática de Dados
 
-Sempre que o usuário pedir para gerar, otimizar ou criar um currículo/perfil no LinkedIn a partir do zero ou de seus dados, execute as etapas abaixo nesta exata ordem:
+O usuário **não precisa** colar seus dados no chat. Você deve procurá-los.
 
-### Passo 1: Busca de Contexto e Dados (Crucial)
-O usuário **NÃO** precisa te dar os dados profissionais dele no chat. É seu dever procurá-los.
-1. Use as ferramentas de `read` e `glob` para verificar os dados do usuário na pasta **`data/input/`**.
-2. **Se houver arquivos PDF** (como `Profile.pdf` ou `Resume.pdf`), **rode o extrator você mesmo** antes de prosseguir:
-   ```bash
-   npm run build && npm run extract-pdf
-   ```
-   Isso evita desperdício de tokens e garante que você leia texto puro.
-3. **Se houver arquivos .txt**, leia-os diretamente.
-4. **Se não encontrar nada**, avise o usuário: *"Por favor, coloque seu currículo ou perfil do LinkedIn em PDF na pasta `data/input/`."*
+1. **Verifique `data/input/`** usando ferramentas como `glob` ou `bash ls`.
+2. **Se encontrar PDFs** (`Profile.pdf`, `Resume.pdf`, etc):
+   - Execute imediatamente:
+     ```bash
+     npm run build && npm run extract-pdf
+     ```
+   - Espere o comando terminar
+   - Leia o arquivo `.txt` gerado diretamente
+3. **Se encontrar `.txt`** já existentes, leia-os diretamente
+4. **Se não encontrar nada**, avise o usuário:
+   > "Não encontrei dados em `data/input/`. Por favor, coloque seu perfil do LinkedIn ou currículo em PDF lá (ex: `Profile.pdf`)"
 
-### Passo 2: Seleção e Leitura de Templates
-NUNCA modifique os arquivos na pasta `templates/`. Eles são apenas moldes.
-1. Para gerar um LinkedIn, leia: `templates/LINKEDIN_TEMPLATE.md`
-2. Para gerar um currículo LaTeX, leia: `templates/latex/curriculo_template.tex`
-3. Para gerar um currículo Markdown puro, leia: `templates/RESUME_TEMPLATE.md`
+### Etapa 2: Selecione e Leia os Templates
 
-### Passo 3: Aplicação de Skills
-Aplique as metodologias e guidelines que estão instaladas em `.agents/skills/`:
-- **`resume-ats-optimizer` e `tech-resume-optimizer`** (Para currículos)
-- **`linkedin-profile-optimizer`** (Para perfis)
-- **`copywriting` e `writing-skills`** (Para redação atraente e humana)
+**NUNCA modifique os templates**. Eles são apenas moldes de referência.
 
-### Passo 4: Geração do Arquivo Final Seguro
-1. Crie o novo arquivo gerado EXCLUSIVAMENTE dentro da pasta `data/output/`. 
-   - Exemplo LaTeX: Salve as mudanças em `data/output/latex/meu_curriculo.tex`
-   - Exemplo Markdown: Salve em `data/output/markdown/LINKEDIN_OTIMIZADO.md` ou `data/output/markdown/RESUMO_ATS.md`.
-2. **NUNCA DEIXE PLACEHOLDERS** (como `[NOME DA EMPRESA]`). O objetivo de ler a pasta de input é justamente substituir todos os placeholders do template pelas informações concretas do usuário.
+- **Para LinkedIn:** `templates/LINKEDIN_TEMPLATE.md`
+- **Para Currículo LaTeX:** `templates/latex/curriculo_template.tex`
+- **Para Currículo Markdown:** `templates/RESUME_TEMPLATE.md`
 
-### Passo 5: Compilação do PDF (se for LaTeX)
-1. Após gerar `data/output/latex/meu_curriculo.tex`, rode a compilação:
-   ```bash
-   npm run compile-latex
-   ```
-2. Se o log mostrar erros no LaTeX, não pare. Corrija o `.tex` autonomamente e rode o script de novo até o PDF ser gerado com sucesso na pasta `data/output/latex/`.
+### Etapa 3: Aplique as Skills de Otimização
 
----
+Consulte as metodologias em `.agents/skills/`:
 
-## 2. Regras Rígidas de Redação e Copywriting
+- **`tech-resume-optimizer`** e **`resume-ats-optimizer`** → Para currículos
+- **`linkedin-profile-optimizer`** → Para perfis do LinkedIn
+- **`copywriting`** e **`writing-skills`** → Para redação natural e impactante
 
-- **Tom Humano:** Escreva de forma natural, como se fosse um profissional conversando com outro. Evite buzzwords corporativas vazias ("sinergia", "paradigma", "focado em resultados").
-- **Métricas e Impacto:** Siga a fórmula: `[Verbo de Ação] + [O que foi feito] + [Ferramentas utilizadas] + [Impacto/Métrica]`.
-- **Caracteres Permitidos:** 
-  - Acentos em português são permitidos e encorajados.
-  - **PROIBIDO USO DE EMOJIS** (🚀, ✨, etc).
-  - **PROIBIDO CARACTERES UNICODE ESPECIAIS** (traços longos, bolinhas não-padrão). Use hífens comuns `-` e asteriscos `*` para listas.
+### Etapa 4: Gere o Arquivo Final
 
----
+1. **Local obrigatório:** `data/output/`
+   - LaTeX → `data/output/latex/curriculo.tex`
+   - Markdown → `data/output/markdown/resume_otimizado.md`
+2. **Substitua TODOS os placeholders** do template com dados reais do usuário
+   - Exemplo: `[NOME COMPLETO]` → `Gustavo Ferreira Cosme`
+   - **Nunca deixe `[PLACEHOLDER]` no arquivo final**
+3. **Mantenha a formatação e estrutura** do template original
 
-## 3. Segurança (Git)
+### Etapa 5: Compile LaTeX para PDF (se aplicável)
 
-A pasta `data/` está no `.gitignore`. Essa é a garantia de que as informações do usuário nunca irão vazar.
-**NUNCA**, sob nenhuma circunstância, rode `git add` ou remova arquivos de `data/` do `.gitignore`.
+Se gerou um `.tex`, compile imediatamente:
+
+```bash
+npm run compile-latex
+```
+
+- O PDF será salvo em `data/output/latex/`
+- Se houver erros, **corrija o `.tex` autonomamente** e rode de novo
+- Não pare até ter sucesso
 
 ---
 
-## 4. Integração IDE (.cursorrules)
+## Regras de Escrita e Tone
 
-Os agentes em editores (como Cursor/Copilot) devem sempre carregar as diretrizes deste arquivo (`AGENTS.md`) como fonte principal de verdade para o fluxo de otimização de carreira e gestão dos currículos e arquivos `.tex`.
+### Tom e Voz
+- **Natural e profissional** - escreva como um desenvolvedor conversando com outro
+- **Sem jargão corporativo vazio** - evite: "sinergia", "paradigma", "focado em resultados", "pensar fora da caixa"
+- **Específico e concreto** - use números, tecnologias reais, resultados mensuráveis
+
+### Fórmula para Bullet Points de Experiência
+
+```
+[Verbo de Ação] + [O que foi feito] + [Tecnologia/Ferramenta] + [Resultado/Impacto]
+```
+
+**Exemplos:**
+- ❌ "Trabalhei com React" 
+- ✅ "Implementei componentes reutilizáveis em React, reduzindo o tempo de desenvolvimento em 30%"
+
+- ❌ "Otimizei o banco de dados"
+- ✅ "Otimizei queries PostgreSQL com índices, reduzindo latência de 500ms para 120ms para 100K usuários/dia"
+
+### Caracteres e Formatação
+- **Acentos em português:** Obrigatório usar (sem é completamente válido)
+- **Emojis:** PROIBIDO (🚀, ✨, ⚡, etc)
+- **Caracteres especiais:** Use hífens `-` e asteriscos `*`, não travessões longos ou símbolos estranhos
+- **Listas:** Use `*` ou `-` simples, não ícones
+
+### Métricas Que Impressionam Recrutadores
+- **Escala:** "1M+ usuários", "50K requisições/segundo", "100+ clientes"
+- **Performance:** "reduzido de X para Y", "melhoria de X%"
+- **Impacto financeiro:** "economizou $XXX", "faturamento de $XXX"
+- **Tempo:** "deployment reduzido de 2h para 15min"
+
+---
+
+## Privacidade e Segurança
+
+### Dados do Usuário
+- A pasta `data/` está em `.gitignore` - dados nunca vazam
+- **NUNCA** rode `git add data/` ou modifique `.gitignore`
+- Após gerar os arquivos, o usuário deve revisá-los antes de usar em produção
+
+### Tokens e Eficiência
+- **Sempre rode `npm run extract-pdf`** quando houver PDFs - evita ler binários
+- **Leia texto, não chat** - evita desperdício de tokens
+- **Use `glob` e `read`** para buscar dados, não pergunte ao usuário
+
+---
+
+## Checklist para Antes de Terminar
+
+- [ ] Dados coletados de `data/input/` (PDF extraído ou `.txt` lido)
+- [ ] Template escolhido e lido
+- [ ] Skills aplicadas (tech-resume-optimizer, copywriting, etc)
+- [ ] Arquivo gerado em `data/output/` com nome claro
+- [ ] ZERO placeholders deixados no arquivo final
+- [ ] LaTeX compilado para PDF (se aplicável)
+- [ ] Aviso ao usuário sobre onde encontrar o arquivo final
+
+---
+
+## Troubleshooting Comum
+
+### "Error: ENOENT: no such file or directory"
+→ Você tentou ler um arquivo que não existe. Verifique o caminho com `bash ls`.
+
+### "LaTeX compilation failed"
+→ Corrija o `.tex` manualmente e rode `npm run compile-latex` de novo. Não desista.
+
+### "Placeholder still in file"
+→ Releia a seção "Etapa 4" - você DEVE substituir todos os `[PLACEHOLDERS]` por dados reais.
+
+### "User doesn't have data in data/input/"
+→ Instrua o usuário: "Coloque `Profile.pdf` em `data/input/` e eu executo o resto automaticamente."

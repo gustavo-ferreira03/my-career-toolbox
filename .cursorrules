@@ -1,8 +1,27 @@
-# Always read instructions from AGENTS.md before operating in this repository
-# This repository focuses on parsing profile data and rendering LaTeX/Markdown resumes.
+# Cursor/IDE Agent Rules for My Career Toolbox
 
-- Priority 1: Do NOT overwrite files in `templates/`
-- Priority 2: Use `data/input/` for context gathering
-- Priority 3: Save generated user files strictly inside `data/output/`
+This repository is specifically designed to work with AI agents (Cursor, Copilot, Cline).
 
-Read `AGENTS.md` for full documentation on the expected workflow.
+## Critical Rules
+
+1. **READ AGENTS.MD FIRST** - It contains the complete workflow
+2. **User data in `data/input/`** - Automatically extract and process
+3. **Never modify `templates/`** - They are reference only
+4. **Always output to `data/output/`** - User files only go there
+5. **Never commit `data/`** - It's in .gitignore for privacy
+
+## Quick Workflow
+
+1. Check `data/input/` for PDFs/TXTs
+2. If PDF exists → run: `npm run build && npm run extract-pdf`
+3. Read the appropriate template from `templates/`
+4. Apply skills from `.agents/skills/`
+5. Generate final file in `data/output/`
+6. If LaTeX → compile with: `npm run compile-latex`
+
+## Key Files
+
+- `AGENTS.md` - Complete instructions (required reading)
+- `QUICKSTART.md` - 3-step guide for users
+- `README.md` - Full documentation
+- `.agents/skills/` - Optimization methodologies

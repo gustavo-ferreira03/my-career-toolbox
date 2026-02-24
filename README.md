@@ -1,120 +1,168 @@
 # My Career Toolbox
 
-Um repositório de ferramentas e utilitários projetados para ajudar você (ou seus agentes de IA) a otimizar perfis do LinkedIn e gerenciar currículos de forma automatizada usando LaTeX.
+Ferramentas de IA para otimizar seu perfil do LinkedIn e gerar currículos automaticamente em LaTeX, Markdown e PDF.
 
-## O que este projeto faz?
-
-1. **Geração de Currículos (LaTeX):** Contém templates focados em conversão e escaneamento por sistemas ATS (Applicant Tracking Systems), compiláveis automaticamente via script.
-2. **Extração de Dados:** Extrai textos de PDFs (como perfis exportados do LinkedIn ou currículos antigos) para servirem de contexto para IAs.
-3. **Templates e Skills para IA:** Inclui exemplos de copywriting e regras instaladas (`.agents/skills`) para garantir que os textos gerados pela IA sejam naturais, profissionais e sem jargões corporativos robóticos.
+Este repositório foi construído para ser usado com agentes de IA (Cursor, Copilot, Cline, OpenCode) - basta fornecer seus dados e o agente faz o resto.
 
 ---
 
-## 🚀 Como Usar
+## O Que Este Projeto Faz
 
-### Opção A: Instalação Local
-#### Pré-requisitos
-- Node.js (v18+)
-- LaTeX (`pdflatex`) instalado no sistema (opcional, necessário apenas para compilar os PDFs localmente).
+1. **Extrai dados de PDFs** - Converte seus PDFs do LinkedIn/currículo em texto puro para análise
+2. **Otimiza conteúdo** - Aplica técnicas de copywriting e métricas de impacto ao seu conteúdo
+3. **Gera currículos** - Cria versões otimizadas em LaTeX (PDF), Markdown e para ATS
+4. **Integra com agentes de IA** - O agente sabe exatamente o que fazer com seus dados
 
-**Instalação do LaTeX:**
-- Ubuntu/Debian: `sudo apt-get install texlive-latex-base texlive-fonts-recommended`
-- Mac: `brew install mactex`
-- Windows: Instale TeX Live ou MiKTeX
+---
 
-### Instalação do Projeto
-Clone o repositório e instale as dependências:
+## Como Começar
+
+### Opção 1: Com Agente de IA (Recomendado)
+
+**Pré-requisitos:**
+- Node.js 18+
+- Uma API key (OpenAI, Anthropic, Google, xAI, etc)
+
+**Passos:**
+
 ```bash
+# 1. Clone e instale
 git clone https://github.com/gustavo-ferreira03/my-career-toolbox.git
 cd my-career-toolbox
 npm install
+
+# 2. Configure sua API key
+cp .env.example .env
+# Edite .env e adicione sua API key
+
+# 3. Rode o agente
+npm run agent
 ```
 
-### Opção B: Devcontainer (Recomendado - Zero Config)
-Se você tem Docker instalado, pode usar o ambiente pré-configurado com tudo que precisa (Node.js, LaTeX, opencode):
+**Próximos passos no agente:**
+1. Coloque seu `Profile.pdf` (exportado do LinkedIn) em `data/input/`
+2. Peça ao agente: *"Otimize meu perfil do LinkedIn para vaga de [CARGO]"*
+3. O agente vai automaticamente:
+   - Extrair seu PDF
+   - Ler os templates
+   - Aplicar skills de otimização
+   - Gerar arquivo em `data/output/`
 
-1. Abra o projeto no VS Code
+---
+
+### Opção 2: Devcontainer (Zero Configuração)
+
+Se você tem Docker:
+
+1. Abra o projeto no **VS Code**
 2. Instale a extensão **Dev Containers**
-3. Clique em "Reopen in Container" (ou `F1` > "Dev Containers: Reopen in Container")
+3. Clique em "Reopen in Container"
 
-Tudo será instalado automaticamente: Node.js 20, LaTeX, GitHub CLI, e o agente opencode.
+Tudo será instalado automaticamente (Node.js, LaTeX, agente, etc).
 
-### Opção C: Apenas o Agente de IA
-Este projeto inclui o **opencode** (um agente de IA CLI) diretamente bundled. Ele já conhece as regras do projeto (via `AGENTS.md`) e pode executar todo o workflow de otimização de carreira de forma autônoma.
+---
 
-1. Configure sua API key criando um arquivo `.env`:
-   ```bash
-   cp .env.example .env
-   # Edite o .env e adicione sua API key (OPENAI_API_KEY, ANTHROPIC_API_KEY, etc.)
-   ```
-2. Execute o agente:
-   ```bash
-   npm run agent
-   ```
-3. O agenteirá abrir uma interface interativa. Basta pedir para ele otimizar seu LinkedIn ou gerar seu currículo.
+### Opção 3: Manual (Sem Agente)
 
-Também é possível rodar o agente em modo não-interativo:
+**Pré-requisitos:**
+- Node.js 18+
+- LaTeX (`pdflatex`) - ver instruções abaixo
+
+**Instalação do LaTeX:**
+- **Ubuntu/Debian:** `sudo apt-get install texlive-latex-base texlive-fonts-recommended`
+- **Mac:** `brew install mactex`
+- **Windows:** Instale TeX Live ou MiKTeX
+- **Ou use Overleaf:** Cole o `.tex` em overleaf.com
+
+**Gerar Currículo:**
 ```bash
-npm run agent:run "Otimize meu LinkedIn para vaga de Frontend Engineer"
+npm run build
+cp templates/latex/curriculo_template.tex data/output/latex/meu_curriculo.tex
+# Edite data/output/latex/meu_curriculo.tex
+npm run compile-latex
 ```
 
-### 3. Gerador de Currículos (LaTeX)
-O repositório inclui um template limpo, com fonte clássica (serifada) e estrutura inspirada no RxResume, otimizado para caber tudo em uma página contínua.
+---
 
-1. Copie o template da pasta `templates/latex/` para sua pasta pessoal:
-   ```bash
-   cp templates/latex/curriculo_template.tex data/output/latex/meu_curriculo.tex
-   ```
-2. Abra `data/output/latex/meu_curriculo.tex` no seu editor favorito e preencha com os seus dados.
-3. Compile para PDF rodando:
-   ```bash
-   npm run compile-latex
-   ```
-   *O seu novo currículo em PDF será gerado na pasta `data/output/latex/` e todos os arquivos temporários de compilação serão limpos automaticamente.*
+## Estrutura de Pastas
 
-**Não quer instalar o LaTeX localmente?**
-Sem problemas! Copie o código de `templates/latex/curriculo_template.tex`, cole no [Overleaf](https://www.overleaf.com/), preencha seus dados e baixe o PDF de lá.
-
-### 4. Extração de Perfil (Para IAs)
-Se você estiver usando uma IA (como ChatGPT, Claude, ou ferramentas CLI como Copilot/Cursor) para reescrever seu LinkedIn, você pode dar a ela seus dados atuais de forma fácil:
-
-1. Exporte seu perfil do LinkedIn como PDF (no seu perfil do LinkedIn clique em `Mais > Salvar como PDF`).
-2. Coloque o arquivo baixado em `data/input/Profile.pdf`.
-3. Rode o extrator:
-   ```bash
-   npm run build
-   npm run extract-pdf
-   ```
-4. Um arquivo `.txt` será gerado. Agora você pode pedir para a sua IA ler esse arquivo e sugerir melhorias baseadas nos arquivos da pasta `templates/`.
+```
+my-career-toolbox/
+├── data/
+│   ├── input/              ← Coloque seus PDFs/TXTs aqui
+│   └── output/
+│       ├── latex/          ← Currículos LaTeX + PDFs gerados
+│       └── markdown/       ← Perfis e currículos Markdown
+├── templates/              ← Moldes (NÃO EDITAR)
+│   ├── LINKEDIN_TEMPLATE.md
+│   ├── RESUME_TEMPLATE.md
+│   └── latex/curriculo_template.tex
+├── .agents/skills/         ← Metodologias de otimização
+├── AGENTS.md              ← Instruções para agentes de IA
+└── package.json
+```
 
 ---
 
-## 🔒 Privacidade e Segurança
-Todos os seus dados pessoais ficam armazenados **exclusivamente** dentro da pasta `data/`. 
-O arquivo `.gitignore` do projeto está configurado para **ignorar todo o conteúdo dessa pasta**. Isso garante que você nunca vai 'commitar' e vazar seu currículo ou dados do LinkedIn no GitHub por engano.
+## Usando com Agentes de IA
+
+### Para Agentes (Cursor, Copilot, Cline)
+
+Leia `AGENTS.md` - ele contém todas as instruções sobre como operar este repositório.
+
+**Em resumo:**
+1. Você não precisa colar dados no chat
+2. O agente busca automaticamente em `data/input/`
+3. Aplica skills de otimização
+4. Gera arquivos finais em `data/output/`
+
+### Exemplo de Prompt
+
+```
+"Leia meu currículo em data/input/Profile.pdf, 
+aplique as skills de tech-resume-optimizer e 
+copywriting, e gere um currículo LaTeX otimizado 
+em data/output/latex/curriculo.tex"
+```
 
 ---
 
-## 🤖 Integração com Agentes de IA
-Este repositório foi construído para ser lido e operado por agentes de inteligência artificial autônomos (como Cursor, Copilot, Cline ou ferramentas CLI).
+## Privacidade e Segurança
 
-Na pasta `.agents/skills/`, existem regras de negócio (skills) que ensinam a IA a:
-- Escrever como um humano (sem emojis, sem listas com ícones estranhos).
-- Usar caracteres padrão de teclados.
-- Estruturar resumos e experiências de acordo com as melhores práticas de RH (usando a fórmula de métricas + ferramentas).
+- ✅ Seus dados **nunca são enviados a nenhum servidor** (exceto à API de IA)
+- ✅ Pasta `data/` está em `.gitignore` - impossível fazer push acidental
+- ✅ Cada agente/projeto tem sua própria cópia isolada
+- ⚠️ Nunca modifique `.gitignore` ou rode `git add data/`
 
-### 💡 Exemplo de Prompts para usar com a sua IA
-Após colocar seu PDF extraído na pasta `data/input/`, você pode abrir o chat do seu Agente de IA neste projeto e mandar:
+---
 
-**Para otimizar o LinkedIn:**
-> "Leia meu perfil extraído em `data/input/Profile.txt` e use a skill `linkedin-profile-optimizer` junto com o template `templates/LINKEDIN_TEMPLATE.md` para recriar o meu LinkedIn focado em [SEU CARGO ALVO]."
+## Scripts Disponíveis
 
-**Para gerar o Currículo (LaTeX):**
-> "Leia meu perfil extraído em `data/input/Profile.txt`. Use as skills `resume-ats-optimizer` e `tech-resume-optimizer` para preencher o arquivo `data/output/latex/meu_curriculo.tex` (baseado no `templates/latex/curriculo_template.tex`). Mantenha exatamente 1 página e use métricas reais."
+```bash
+npm run build              # Compila TypeScript
+npm run extract-pdf        # Extrai PDFs em data/input/ para .txt
+npm run compile-latex      # Compila .tex em data/output/latex/ para PDF
+npm run agent              # Abre agente opencode interativo
+npm run agent:run "msg"    # Executa agente com mensagem
+```
+
+---
+
+## Troubleshooting
+
+### "Não encontro meus dados"
+→ Coloque o PDF em `data/input/Profile.pdf` e o agente vai extrair automaticamente.
+
+### "LaTeX não compila"
+→ Certifique-se de que LaTeX está instalado. Ou use Overleaf: copie o `.tex` para lá.
+
+### "Preciso de ajuda com agente"
+→ Leia `AGENTS.md` ou rode `npm run agent` e peça ao agente.
 
 ---
 
 ## Licença
 
-Distribuído sob a licença MIT. Veja [LICENSE](LICENSE) para mais informações.
-Criado e mantido por Gustavo Cosme.
+MIT - Criado e mantido por Gustavo Cosme
+
+**Dúvidas?** Abra uma issue ou consulte `AGENTS.md`
