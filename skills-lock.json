@@ -6,6 +6,11 @@
       "sourceType": "github",
       "computedHash": "35d1a5148644033a34a60e95f4bc6011b7930cf89d19ee0dcbbb58137ddf71c2"
     },
+    "anti-slop": {
+      "source": "rand/cc-polymath",
+      "sourceType": "github",
+      "computedHash": "5240c352ddf501b2bbfcdb7cc44552f56ddb0361856b39ee4235b779f2269731"
+    },
     "find-skills": {
       "source": "vercel-labs/skills",
       "sourceType": "github",
