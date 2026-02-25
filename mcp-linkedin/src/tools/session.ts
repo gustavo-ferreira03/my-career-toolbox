@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { getPage, closeBrowser } from "../browser.js";
 import { isLoggedIn, waitForManualLogin } from "../auth.js";
+import { resetPostRateLimit } from "./post.js";
 
 export function registerSessionTools(server: McpServer): void {
   server.registerTool(
@@ -101,11 +102,12 @@ export function registerSessionTools(server: McpServer): void {
     },
     async () => {
       await closeBrowser();
+      resetPostRateLimit();
       return {
         content: [
           {
             type: "text" as const,
-            text: "Browser closed. Session ended.",
+            text: "Browser closed. Session ended. Post rate limit reset.",
           },
         ],
       };

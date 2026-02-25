@@ -77,6 +77,66 @@ data/output/    → Generated outputs go here
 templates/      → Structural references (never modify)
 ```
 
+## MCP LinkedIn Server (`mcp-linkedin/`)
+
+The project includes a Model Context Protocol server that automates LinkedIn via a headless browser (Patchright). Understand these rules before using any LinkedIn tool.
+
+### Architecture
+
+- **8 tool modules** in `src/tools/`: session, profile-read, profile-write, skills, jobs, resume, apply, post
+- **Singleton browser** in `src/browser.ts`: one `BrowserContext` shared across all tools
+- **Persistent cookies** at `~/.linkedin-mcp/profile/` survive logout
+- **Anti-detection**: Patchright (Playwright fork), human-like delays, warm-up visits to Google/GitHub before LinkedIn
+
+### Session lifecycle (3 different meanings of "session")
+
+| What | Lifecycle | Storage |
+|---|---|---|
+| Browser context | Created on first tool use, destroyed by `logout` or process exit | In-memory singleton in `browser.ts` |
+| LinkedIn auth | Cookies in persistent profile dir | On disk at `~/.linkedin-mcp/profile/` (survives logout) |
+| Post rate limit | Resets on `logout` or process restart | In-memory counter in `post.ts` |
+
+### Tool call order matters
+
+- `login` opens a **headed** (visible) browser so the user can type credentials and handle 2FA/captcha
+- All other tools use **headless** (invisible) browser by default
+- `getBrowser()` now detects headless-to-headed transitions and recreates the browser automatically
+- If `login` times out or the browser seems stuck, call `logout` first to force a clean state, then `login` again
+
+### Post rate limiting
+
+- Max 3 posts per session (in-memory counter)
+- `create_post` checks the limit before opening the editor
+- `publish_post` increments the counter (only counted when actually published)
+- `logout` resets the counter -- use it to start a fresh posting session
+- Creating a post without publishing does NOT count toward the limit
+
+### LinkedIn UI is fragile
+
+- CSS selectors and button text change frequently (LinkedIn redesigns often)
+- All locators are centralized in `src/utils/locators.ts` -- fix them there, not inline
+- Post editor is a Quill-based contenteditable div (`.ql-editor`), not a textarea -- requires `keyboard.type()`, not `fill()`
+- Button text is bilingual (PT-BR + EN) -- locators use regex patterns like `/publicar|post/i`
+
+### Troubleshooting
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| `login` does not open a window | Browser context was already created headless by another tool | Call `logout` first, then `login` |
+| `Target page, context or browser has been closed` | Browser process died or was killed externally | Call `logout` to clean up singletons, then `login` |
+| `Rate limit reached` even after logout | Old MCP process still running (code not reloaded) | Restart OpenCode to restart the MCP server process |
+| `Not logged in` after successful login | Cookies not loaded on first navigation | `ensureLoggedIn()` retries 3 times with backoff -- this is usually transient |
+| Post editor did not open | LinkedIn changed the "Start a post" button | Update `startPostButton` in `src/utils/locators.ts` |
+
+### When modifying MCP server code
+
+1. Edit files in `mcp-linkedin/src/`
+2. Run `npx tsc --noEmit --project mcp-linkedin/tsconfig.json` to type-check
+3. **Restart OpenCode** for changes to take effect (the MCP server is a child process)
+4. Never modify browser profile data directly -- use `logout`/`login` to reset
+
+---
+
 ## Everything Else
 
 All workflows, writing rules, LaTeX template details, PT-BR quality guidelines, and examples are in:

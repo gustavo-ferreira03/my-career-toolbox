@@ -16,16 +16,24 @@ export interface BrowserOptions {
 
 let context: BrowserContext | null = null;
 let activePage: Page | null = null;
+let currentHeadless: boolean | null = null;
 
 export async function getBrowser(
   opts: BrowserOptions = {}
 ): Promise<BrowserContext> {
+  const wantHeadless = opts.headless ?? true;
+
+  // If a context exists but with wrong headless mode, close it first
+  if (context && currentHeadless !== null && currentHeadless !== wantHeadless) {
+    await closeBrowser();
+  }
+
   if (context) return context;
 
   const profileDir = opts.profileDir ?? DEFAULT_PROFILE_DIR;
 
   context = await chromium.launchPersistentContext(profileDir, {
-    headless: opts.headless ?? true,
+    headless: wantHeadless,
     slowMo: opts.slowMo ?? 50,
     viewport: { width: 1280, height: 900 },
     args: [
@@ -34,6 +42,7 @@ export async function getBrowser(
     ],
   });
 
+  currentHeadless = wantHeadless;
   return context;
 }
 
@@ -53,6 +62,7 @@ export async function closeBrowser(): Promise<void> {
     await context.close();
     context = null;
     activePage = null;
+    currentHeadless = null;
   }
 }
 

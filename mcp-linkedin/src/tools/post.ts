@@ -22,9 +22,18 @@ import {
 
 /**
  * Rate limiting: track posts created per session to enforce daily cap.
+ * The counter resets when the browser session is closed (logout).
  */
 let postsCreatedThisSession = 0;
 const MAX_POSTS_PER_SESSION = 3;
+
+/**
+ * Reset the post rate limiter. Called when the browser session ends
+ * so a new session gets a fresh counter.
+ */
+export function resetPostRateLimit(): void {
+  postsCreatedThisSession = 0;
+}
 
 /**
  * Type text into LinkedIn's Quill-based contenteditable editor.
